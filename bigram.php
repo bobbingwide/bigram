@@ -1,0 +1,86 @@
+<?php
+/*
+Plugin Name: bigram
+Plugin URI: http://www.oik-plugins.com/oik-plugins/bigram
+Description: Extra processing when creating a bigram post type
+Version: 0.1
+Author: bobbingwide
+Author URI: http://www.oik-plugins.com/author/bobbingwide
+Text Domain: oik
+Domain Path: /languages/
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+
+    Copyright 2015 Bobbing Wide (email : herb@bobbingwide.com )
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2,
+    as published by the Free Software Foundation.
+
+    You may NOT assume that you can use any other version of the GPL.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    The license for this software can likely be found here:
+    http://www.gnu.org/licenses/gpl-2.0.html
+
+*/
+
+/**
+ * Set bigram fields when creating/updating a post
+ * 
+ * Title expected to be Sxxx Bxxxx
+ * 
+ * - first word (S-word) used for the S tag
+ * - second word (B-word) used for the B tag
+ * - WordPress SEO keyword: S-word B-word bigram
+ * - Meta description set to: $title - another SB bi-gram 
+ * - 
+ */
+function bigram_save_fields() {
+  $args['tax_input'] = array( "s" => $sword 
+                            , "b" => $bword 
+                            );
+  return( $post );                            
+}
+
+/** 
+
+   To late to manipulate the content when the post has been created.
+    
+    $content = $post->content;
+    $content = trim( $content );
+    if ( !$content ) {
+      $post->
+    }
+
+
+
+ */
+
+
+function bigram_wp_insert_post( $post_ID, $post, $update ) {
+  bw_trace2(); 
+  $status = $post->post_status;
+  $post_type = $post->post_type; 
+  if ( $status != "auto-draft" && $post_type == "bigram" ) {
+    
+    $title = $post->post_title;
+    list( $sword, $bword ) = explode(" ", $title . " . . ");
+    $sword = strtolower( $sword );
+    $bword = strtolower( $bword );
+    bw_trace2( $sword, "sword", false );
+    bw_trace2( $bword, "bword", false );
+    wp_set_post_terms( $post_ID, $sword, "s" );
+    wp_set_post_terms( $post_ID, $bword, "b" );
+    update_post_meta( $post_ID, "_yoast_wpseo_metadesc", "$title - another SB bi-gram" );
+    update_post_meta( $post_ID, "_yoast_wpseo_focuskw", "$title bigram" );
+  }
+}
+
+add_action( "wp_insert_post", "bigram_wp_insert_post", 10, 3 ); 
+
+                                
