@@ -3,7 +3,7 @@
 Plugin Name: bigram
 Plugin URI: http://www.oik-plugins.com/oik-plugins/bigram
 Description: Extra processing when creating a bigram post type
-Version: 0.1
+Version: 0.1.0
 Author: bobbingwide
 Author URI: http://www.oik-plugins.com/author/bobbingwide
 Text Domain: oik
@@ -11,7 +11,7 @@ Domain Path: /languages/
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-    Copyright 2015 Bobbing Wide (email : herb@bobbingwide.com )
+    Copyright 2015,2016 Bobbing Wide (email : herb@bobbingwide.com )
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2,
@@ -28,6 +28,14 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
     http://www.gnu.org/licenses/gpl-2.0.html
 
 */
+bigram_loaded();
+
+/**
+ * Function invoked when bigram is loaded 
+ */													
+function bigram_loaded() {
+	add_action( "wp_insert_post", "bigram_wp_insert_post", 10, 3 ); 
+}
 
 /**
  * Set bigram fields when creating/updating a post
@@ -47,27 +55,20 @@ function bigram_save_fields() {
   return( $post );                            
 }
 
-/** 
-
-   To late to manipulate the content when the post has been created.
-    
-    $content = $post->content;
-    $content = trim( $content );
-    if ( !$content ) {
-      $post->
-    }
-
-
-
+/**
+ * Implement 'wp_insert_post' for bigram
+ *
+ * It's too late to manipulate the content when the post has been created.
+ * 
+ * @param ID $post_ID
+ * @param object $post
+ * @param bool $update 
  */
-
-
 function bigram_wp_insert_post( $post_ID, $post, $update ) {
   bw_trace2(); 
   $status = $post->post_status;
   $post_type = $post->post_type; 
   if ( $status != "auto-draft" && $post_type == "bigram" ) {
-    
     $title = $post->post_title;
     list( $sword, $bword ) = explode(" ", $title . " . . ");
     $sword = strtolower( $sword );
@@ -81,6 +82,5 @@ function bigram_wp_insert_post( $post_ID, $post, $update ) {
   }
 }
 
-add_action( "wp_insert_post", "bigram_wp_insert_post", 10, 3 ); 
 
                                 
