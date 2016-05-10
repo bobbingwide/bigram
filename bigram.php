@@ -35,6 +35,7 @@ bigram_loaded();
  */													
 function bigram_loaded() {
 	add_action( "wp_insert_post", "bigram_wp_insert_post", 10, 3 ); 
+	add_action( "pre_get_posts", "bigram_pre_get_posts" );
 }
 
 /**
@@ -80,6 +81,48 @@ function bigram_wp_insert_post( $post_ID, $post, $update ) {
     update_post_meta( $post_ID, "_yoast_wpseo_metadesc", "$title - another SB bi-gram" );
     update_post_meta( $post_ID, "_yoast_wpseo_focuskw", "$title bigram" );
   }
+}
+
+
+
+/**
+ * Implement "pre_get_posts" for bigram
+ *
+ * Updates the array of post types which can be displayed on the page that's showing the blog posts.
+ * i.e. The home page, as opposed to the front page.
+ *
+ * Notes: 
+ * - You can't check for main query in "pre_get_posts" 
+ * - You can't use WP_Query::is_main_query() either
+ * - You can't check is_home() in pre_get_posts for other reasons
+ * - Assumes that the "post" post type, for blog posts, will always be included.
+ * - Once we've run the main query we don't need this filter any more.
+ 
+ * 
+ * @param WP_Query $query - the query object for the current query
+ * @return WP_Query - the updated query object 
+ */
+function bigram_pre_get_posts( $query ) {
+	bw_trace2();
+	if ( is_category() && false == $query->get('suppress_filters') ) {
+		$post_types = array( "post", "bigram" );
+		/*
+		global $wp_post_types;
+		foreach ( $wp_post_types as $post_type => $data ) {
+		
+			//$supports = post_type_supports( $post_type, "home" );
+			//if ( $supports ) {
+				$post_types[] = $post_type;
+				if ( $post_type == "attachment" ) {
+					add_filter( "posts_where", "bigram_posts_where", 10, 2);
+				}
+			}
+		}
+		*/
+		$query->set( 'post_type', $post_types );
+		remove_action( "pre_get_posts", "bigram_pre_get_posts" );
+	}
+	return( $query );
 }
 
 
