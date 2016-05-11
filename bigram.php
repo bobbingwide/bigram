@@ -36,6 +36,7 @@ bigram_loaded();
 function bigram_loaded() {
 	add_action( "wp_insert_post", "bigram_wp_insert_post", 10, 3 ); 
 	add_action( "pre_get_posts", "bigram_pre_get_posts" );
+	add_action( "run_bigram.php", "bigram_run_bigram" );
 }
 
 /**
@@ -123,6 +124,16 @@ function bigram_pre_get_posts( $query ) {
 		remove_action( "pre_get_posts", "bigram_pre_get_posts" );
 	}
 	return( $query );
+}
+
+/**
+ * Implement "run_bigram.php" for bigram 
+ */
+function bigram_run_bigram() {
+	oik_require( "admin/bigram-run-bigram.php", "bigram" );
+	bigram_lazy_run_bigram();
+	
+
 }
 
 

@@ -32,6 +32,7 @@ class SB {
 	
 	public $image_dir;
 	public $post_mime_type;
+	public $additional_body_text;
 	
 	/**
 	 *
@@ -40,6 +41,7 @@ class SB {
 	 */
 	function __construct( $sb, $directory=null ) {
 		$this->image_dir = $directory; 
+		$this->additional_body_text = null;
 		
 		$this->sb = trim( $sb );
 		if ( $directory ) {
@@ -74,7 +76,6 @@ Secret board.jpg
 		$sbstring = str_replace( ".", " ", $sbstring );
 		$words = explode( " ", $sbstring );
 		$category = "i";
-		//$mapped_category = "Seen By"; 
 		switch ( count( $words ) ) {
 			case 0:
 			case 1:
@@ -84,19 +85,23 @@ Secret board.jpg
 				$bpos =strpos( $words[0], "b" );
 				$sword = substr( $words[0], 0, $bpos );
 				$bword = substr( $words[0], $bpos );
-				
 				break;
 				
 			case 3: 
-			default:
-				$sword = ucfirst( $words[0] );
-				$bword = ucfirst( $words[1] );
+				$sword = $words[0];
+				$bword = $words[1];
 				break;
+				
+			default:
+				$sword = $words[0];
+				$bword = $words[1];
+				$category = $words[2];
 			 
 		}
 		$body_text = $this->sb;		
-		
 		$mapped_category = $this->map_category( $category );
+		$sword = ucfirst( $sword );
+		$bword = ucfirst( $bword );
 		echo "$sword,$bword,$category,$mapped_category,$body_text" . PHP_EOL;
 		$this->title_text = "$sword $bword";
 		$this->sword = strtolower( $sword );
@@ -104,7 +109,6 @@ Secret board.jpg
 		$this->body_text = $body_text;
 		$this->get_date_from_body();
 		$this->category = $mapped_category;
-		
 	}
 
 	/**
@@ -160,8 +164,16 @@ Sabena Bus              b   found at Brussels Airport
 
 	}
 	
+	/**
+	 * Get date from body
+	 *
+	 * In the initial load we defaulted to 1991-07-30 since
+	 * we don't actually know. 30th July is my birthday. 
+	 * The project was 'unfunded' 6th Feb 1991 so we probably didn't start the list then
+	 * 
+	 */ 
 	function get_date_from_body() {
-		$this->post_date = "1991-07-30";
+		$this->post_date = bw_format_date(); // "1991-07-30";
 		if ( $this->body_text ) {
 			$dates = explode( " ", $this->body_text );
 			foreach ( $dates as $date ) {
@@ -263,8 +275,11 @@ Sabena Bus              b   found at Brussels Airport
 				break;
 			
 			default:
-				$post_content .= "<!--more--><br />From the original SB.txt";
+				//$post_content .= "<!--more--><br />From the original SB.txt";
+				
 		}
+		$post_content .= "<!--more-->";
+		$post_content .= $this->additional_body_text;
 		return( $post_content );
 	}
 
@@ -355,6 +370,11 @@ Sabena Bus              b   found at Brussels Airport
 	 */
 	function get_category_id( $slug ) {
     $object = get_category_by_slug( $slug );
+		if ( !$object ) {
+			bw_trace2();
+			bw_backtrace();
+			echo $slug;
+		}
 		//print_r( $object );
 		return( $object->term_id );
 	}
@@ -453,6 +473,15 @@ Sabena Bus              b   found at Brussels Airport
 		if ( $attached_file ) {
 			update_post_meta( $target_id, "_wp_attached_file" , $attached_file );
 		}
-	}  
+	}
+	
+	/**
+	 * Set additional body text 
+	 * 
+	 * 
+	 */ 
+	function set_additional_body_text( $additional_body_text ) {
+		$this->additional_body_text = $additional_body_text;
+	} 
 
 }			
