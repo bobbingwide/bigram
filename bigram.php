@@ -51,8 +51,8 @@ function bigram_loaded() {
  * - 
  */
 function bigram_save_fields() {
-  $args['tax_input'] = array( "s" => $sword 
-                            , "b" => $bword 
+  $args['tax_input'] = array( "s-word" => $sword 
+                            , "b-word" => $bword 
                             );
   return( $post );                            
 }
@@ -77,8 +77,8 @@ function bigram_wp_insert_post( $post_ID, $post, $update ) {
     $bword = strtolower( $bword );
     bw_trace2( $sword, "sword", false );
     bw_trace2( $bword, "bword", false );
-    wp_set_post_terms( $post_ID, $sword, "s" );
-    wp_set_post_terms( $post_ID, $bword, "b" );
+    wp_set_post_terms( $post_ID, $sword, "s-word" );
+    wp_set_post_terms( $post_ID, $bword, "b-word" );
     update_post_meta( $post_ID, "_yoast_wpseo_metadesc", "$title - another SB bi-gram" );
     update_post_meta( $post_ID, "_yoast_wpseo_focuskw", "$title bigram" );
   }

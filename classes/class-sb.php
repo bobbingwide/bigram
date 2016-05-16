@@ -198,8 +198,8 @@ Sabena Bus              b   found at Brussels Airport
 	function get_bigrams() {
 		oik_require( "includes/bw_posts.inc" );
 		$tax_query = array( 'relation' => 'AND'
-											, array( 'taxonomy' => 's', 'field' => 'slug', 'terms' => array( $this->sword ) )
-											, array( 'taxonomy' => 'b', 'field' => 'slug', 'terms' => array( $this->bword ) )
+											, array( 'taxonomy' => 's-word', 'field' => 'slug', 'terms' => array( $this->sword ) )
+											, array( 'taxonomy' => 'b-word', 'field' => 'slug', 'terms' => array( $this->bword ) )
 											);
 		$atts = array( "post_type" => "bigram" 
 								, "post_status" => "any" 
@@ -317,8 +317,8 @@ Sabena Bus              b   found at Brussels Airport
 	 * @param ID $id the post to update
 	 */
 	function set_tags( $id ) {
-		wp_set_post_terms( $id, $this->sword, "s" );
-		wp_set_post_terms( $id, $this->bword, "b" );
+		wp_set_post_terms( $id, $this->sword, "s-word" );
+		wp_set_post_terms( $id, $this->bword, "b-word" );
 		$category_id = $this->get_category_id( $this->category );
 		wp_set_post_terms( $id, $category_id, "category" );
 	}
@@ -398,6 +398,7 @@ Sabena Bus              b   found at Brussels Airport
 		$media_file = $this->write_media_file( $this->sb, $this->post_mime_type, $tmp_name, $this->post_date );
 		print_r( $media_file );
 		$this->update_attachment_metadata( $attachment_id, $media_file['file'] );
+		return( $attachment_id );
 	}
 	
 	/**
@@ -485,6 +486,20 @@ Sabena Bus              b   found at Brussels Airport
 	 */ 
 	function set_additional_body_text( $additional_body_text ) {
 		$this->additional_body_text = $additional_body_text;
-	} 
+	}
+	
+	/**
+	 * Set the image as featured
+	 *
+	 * Each new image attached to the bigram becomes the featured image.
+	 * We'll cater for multiple images later.
+	 *
+	 * @param ID $id post ID of the bigram
+	 * @param ID $attachment_id post ID of the attached image
+	 */
+	function set_featured_image( $id, $attachment_id ) {
+		//update_post_meta( $id, "_thumbnail_id", $attachment_id );
+		set_post_thumbnail( $id, $attachment_id );
+	}
 
 }			
