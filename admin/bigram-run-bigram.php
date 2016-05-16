@@ -1,5 +1,9 @@
 <?php // (C) Copyright Bobbing Wide 2016
 
+if ( PHP_SAPI !== "cli" ) { 
+	die();
+}
+
 /**
  * Define the bigram identified by this file or set of words
  * 
@@ -84,6 +88,7 @@ function bigram_run_bigram_image( $sb, $directory, $additional_body_text ) {
 		$id = $sb_obj->insert_bigram(); 
 	}
 	$sb_obj->set_tags( $id );
-	$sb_obj->attach_image( $id, "$directory/$sb" );
+	$attachment_id = $sb_obj->attach_image( $id, "$directory/$sb" );
+	$sb_obj->set_featured_image( $id, $attachment_id );
 
 }
