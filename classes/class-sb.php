@@ -169,7 +169,8 @@ Sabena Bus              b   found at Brussels Airport
 	 *
 	 * In the initial load we defaulted to 1991-07-30 since
 	 * we don't actually know. 30th July is my birthday. 
-	 * The project was 'unfunded' 6th Feb 1991 so we probably didn't start the list then
+	 * The project was 'unfunded' 6th Feb 1991 so we probably didn't start the list then.
+	 * 
 	 * 
 	 */ 
 	function get_date_from_body() {
@@ -278,7 +279,9 @@ Sabena Bus              b   found at Brussels Airport
 				//$post_content .= "<!--more--><br />From the original SB.txt";
 				
 		}
+		$post_content .= "\n";
 		$post_content .= "<!--more-->";
+		$post_content .= "\n";
 		$post_content .= $this->additional_body_text;
 		return( $post_content );
 	}
