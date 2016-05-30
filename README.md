@@ -70,7 +70,7 @@ And some bits were cribbed from Pictorico.
 
 ## Upgrade Notice 
 # 0.1.1 
-Latest version on bigram.co.uk
+Latest version on bigram.co.uk ( end May 2016 )
 
 # 0.1.0 
 Now on GitHub.
@@ -88,6 +88,7 @@ The original site was developed with Drupal.
 * Added: Batch routine to add an image or bigram [github bobbingwide issue 3]
 * Changed: Implement 'pre_get_posts' action for bigram
 * Fixed: Rename custom taxonomies [github bobbingwide bigram issue 5]
+* Changed: Validate the [bw_new] form [github bobbingwide bigram issue 6]
 
 # 0.1.0 
 * Tested: With WordPress 4.5.2
