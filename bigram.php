@@ -67,6 +67,7 @@ function bigram_save_fields() {
  * Implement 'wp_insert_post' for bigram
  *
  * It's too late to manipulate the content when the post has been created.
+ * Some of the fields are now in $_POST?
  * 
  * @param ID $post_ID
  * @param object $post
@@ -88,6 +89,11 @@ function bigram_wp_insert_post( $post_ID, $post, $update ) {
     wp_set_post_terms( $post_ID, $bword, "b-word" );
     update_post_meta( $post_ID, "_yoast_wpseo_metadesc", "$title - another SB bi-gram" );
     update_post_meta( $post_ID, "_yoast_wpseo_focuskw", "$title bigram" );
+		bw_trace2( $_POST, "_POST from validated?", false );
+		$thumbnail_id = bw_array_get( $_POST, "_thumbnail_id", null );
+		if ( $thumbnail_id ) {
+			update_post_meta( $post_ID, "_thumbnail_id", $thumbnail_id );
+		}
   }
 }
 
@@ -214,7 +220,7 @@ function bigram_oik_media_create_attachment( $key, $file, $fields, &$validated )
 	
 	$validated['post_title'] = $post_title;
 	$validated['post_content'] = $post_content;
-	$validated['_thumbnail'] = $attachment_id;
+	$validated['_thumbnail_id'] = $attachment_id;
 }
 
 /**
