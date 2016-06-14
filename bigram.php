@@ -3,7 +3,7 @@
 Plugin Name: bigram
 Plugin URI: http://www.oik-plugins.com/oik-plugins/bigram
 Description: Extra processing when creating a bigram post type
-Version: 0.1.1
+Version: 0.1.2
 Author: bobbingwide
 Author URI: http://www.oik-plugins.com/author/bobbingwide
 Text Domain: oik
@@ -163,11 +163,7 @@ function bigram_oik_add_new_format_bigram( $format, $post_type ) {
 /**
  * Validate and create the media attachment
  *
- * @param string $key - the field name used for the file
- * @param array $file - a PHP file structure: name, type, tmp_name, error, size
- * @param array $fields - the field names
- * @param array $validated - validation status
- * 
+ * ` 
      [0] => file
     [1] => Array
         (
@@ -187,6 +183,12 @@ function bigram_oik_add_new_format_bigram( $format, $post_type ) {
     [3] => Array
         (
         )
+ * `
+ * 
+ * @param string $key - the field name used for the file
+ * @param array $file - a PHP file structure: name, type, tmp_name, error, size
+ * @param array $fields - the field names
+ * @param array $validated - validation status
 
  */ 
 function bigram_oik_media_create_attachment( $key, $file, $fields, &$validated ) {
@@ -202,8 +204,11 @@ function bigram_oik_media_create_attachment( $key, $file, $fields, &$validated )
 	$post_title = "$s_word $b_word";
 	$post_content = bw_array_get( $_REQUEST, "post_content", null );
 	$file['name'] = "$post_title.jpg";
+	
+	$time = bigram_oik_media_get_file_date( $file );
+	
 	require_once( ABSPATH . 'wp-admin/includes/admin.php' );
-	$file_return = wp_handle_upload( $file, array('test_form' => false ) );
+	$file_return = wp_handle_upload( $file, array('test_form' => false ), $time );
 	bw_trace2( $file_return, "file_return", true, BW_TRACE_DEBUG );
   $filename = $file_return['file'];
 	$attachment = array( 'post_mime_type' => $file_return['type']
@@ -211,6 +216,7 @@ function bigram_oik_media_create_attachment( $key, $file, $fields, &$validated )
 										 , 'post_content' => $post_content
 										 , 'post_status' => 'inherit'
 										 , 'guid' => $file_return['url']
+										 , 'post_date' => $time
 										 );
 	$attachment_id = wp_insert_attachment( $attachment, $file_return['url'] );
 	require_once(ABSPATH . 'wp-admin/includes/image.php');
@@ -220,7 +226,21 @@ function bigram_oik_media_create_attachment( $key, $file, $fields, &$validated )
 	
 	$validated['post_title'] = $post_title;
 	$validated['post_content'] = $post_content;
+	$validated['post_date'] = $time;						
 	$validated['_thumbnail_id'] = $attachment_id;
+}
+
+/**
+ * Gets the original image file date
+ *
+ * @param $file
+ * @return string image date
+ */ 
+function bigram_oik_media_get_file_date( $file ) {
+	//print_r( $file );
+	oik_require( "includes/oik-media-date.php", "oik-media" );
+  $date = oik_media_get_file_date( $file['tmp_name'] );
+	return( $date );
 }
 
 /**
