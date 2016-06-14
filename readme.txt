@@ -4,7 +4,7 @@ Donate link: http://www.oik-plugins.com/oik/oik-donate/
 Tags: specific, behaviour
 Requires at least: 4.5.2
 Tested up to: 4.5.2
-Stable tag: 0.1.1
+Stable tag: 0.1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -61,14 +61,19 @@ It was originally put together with TwentyFourteen.
  
 It then suffered briefly with an Artisteer theme ( sb0515 ); used for styling basics. 
 
-And some bits were cribbed from Pictorico.
-
+And some bits were cribbed from Pictorico... but they don't work well on tablets or smart phones.
 
 
 == Screenshots ==
 1. None yet
 
 == Upgrade Notice ==
+= 0.1.3 = 
+Upgrade to set the bigram date from the original date time of the image
+
+= 0.1.2 =
+Now sets featured image from the "Submit bigram" page... [bw_new] shortcode
+
 = 0.1.1 =
 Latest version on bigram.co.uk ( end May 2016 )
 
@@ -81,6 +86,12 @@ The original site was developed with Drupal.
 
 
 == Changelog ==
+= 0.1.3 =
+* Changed: uses oik-media logic to determine the original date time of the image and set the published date of a bigram [github bobbingwide bigram issue 6]
+
+= 0.1.2 =
+* Changed: Set featured image when a new bigram is created using the [bw_new] form [github bobbingwide bigram issue 6]
+
 = 0.1.1 = 
 * Added: Populate the database with the original bigrams from SB.txt [github bobbingwide bigram issue 1] 
 * Added: Repopulate the database with existing images [github bobbingwide bigram issue 2]

@@ -3,7 +3,7 @@
 Plugin Name: bigram
 Plugin URI: http://www.oik-plugins.com/oik-plugins/bigram
 Description: Extra processing when creating a bigram post type
-Version: 0.1.2
+Version: 0.1.3
 Author: bobbingwide
 Author URI: http://www.oik-plugins.com/author/bobbingwide
 Text Domain: oik
