@@ -87,6 +87,13 @@ function bigram_wp_insert_post( $post_ID, $post, $update ) {
     bw_trace2( $bword, "bword", false );
     wp_set_post_terms( $post_ID, $sword, "s-word" );
     wp_set_post_terms( $post_ID, $bword, "b-word" );
+		
+		$s_letter = bigram_map_second_letter( $sword );
+		
+    wp_set_post_terms( $post_ID, $s_letter, "s-letter" );
+		$b_letter = bigram_map_second_letter( $bword );
+    wp_set_post_terms( $post_ID, $b_letter, "b-letter" );
+		
     update_post_meta( $post_ID, "_yoast_wpseo_metadesc", "$title - another SB bi-gram" );
     update_post_meta( $post_ID, "_yoast_wpseo_focuskw", "$title bigram" );
 		bw_trace2( $_POST, "_POST from validated?", false );
@@ -304,6 +311,28 @@ function bigram_add_new_validate( $valid, $format, $fields, &$validated ) {
 		$validated['post_title'] = $post_title;
 	}
 	return( $valid );
+}
+
+/**
+ * Map the second letter to a term
+ * 
+ * - Choose the second non blank value from the field
+ * - Simplify accented characters to A..Z
+ * - Handle other special characters as we see fit.
+ * 
+ * Letter        | Term | Comments
+ * -------       | ---- | -------------
+ * A..Z          | same | uppercased first character passed through remove_accents() 
+ * 0..9          | same |
+ * _             | _    | @TODO to be completed
+ * [             | [    |
+ * anything else | ?    | 
+ */
+function bigram_map_second_letter( $field ) {
+	$string = trim( $field );
+	$new_term = ucfirst( substr( $string, 1, 1 ) );
+	$new_term = remove_accents( $new_term );
+	return( $new_term );
 }
  
 
