@@ -43,6 +43,7 @@ function bigram_loaded() {
 	add_filter( "bw_field_validation_b-word", "bigram_validate_b_word", 10, 3 );
 	add_filter( "bw_field_validation_post_content", "bigram_validate_post_content", 10, 3 );
 	add_filter( "oik_add_new_validate", "bigram_add_new_validate", 10, 4 );
+	add_action( "oik_fields_loaded", "bigram_oik_fields_loaded" );
 }
 
 /**
@@ -334,6 +335,73 @@ function bigram_map_second_letter( $field ) {
 	$new_term = remove_accents( $new_term );
 	return( $new_term );
 }
+
+
+/**
+ * Implement "oik_fields_loaded" for bigram
+ * 
+ * Register the CPTs, Taxonomies and relationships that were previously defined using oik-types
+ * but which we now want to associate to the REST API
+ *
+ */
+function bigram_oik_fields_loaded() {
+	bigram_register_taxonomies();
+	bigram_register_bigram();
+	
+	bigram_check_post_type_object( "bigram" );
+
+}
+
+/**
+ * Register the custom taxonomies used by bigram
+ * 
+ */
+function bigram_register_taxonomies() { 
+	$tags = array( "s-word", "b-word", "s-letter", "b-letter" );
+	foreach ( $tags as $tag ) {
+		$args = array( "show_in_rest" => true
+								 , "rest_base"  => $tag
+								 , "rest_controller_class" => 'WP_REST_Terms_Controller'
+								 , "label" => $tag 
+								 );
+		bw_register_custom_tags( $tag, null, $args );
+		
+		bigram_check_tag_object( $tag );
+	}
+}
+
+/**
+ * Register the bigram post type
+ *
+ */
+function bigram_register_bigram() {
+  $post_type = 'bigram';
+  $post_type_args = array();
+  $post_type_args['label'] = 'bigrams';
+  $post_type_args['description'] = 'Bi-gram - a pair of consecutive written units such as letters, syllables, or words.';
+  $post_type_args['supports'] = array( 'title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'author', 'publicize', 'home' );
+  $post_type_args['taxonomies'] = array( "category", "s-word", "b-word", "s-letter", "b-letter" );
+  $post_type_args['has_archive'] = true;
+	$post_type_args['show_in_rest'] = true;
+	$post_type_args['rest_base'] = 'bigram';
+	$post_type_args['rest_controller_class'] = 'WP_REST_Posts_Controller';
+  //$post_type_args['menu_icon'] = 'dashicons-admin-';
+  bw_register_post_type( $post_type, $post_type_args );
+	
+	
+
+}
+
+function bigram_check_post_type_object( $post_type ) {
+	$post_type_object = get_post_type_object( $post_type );
+	bw_trace2( $post_type_object, "post_type_object", true );
+}
+
+function bigram_check_tag_object( $tag ) {
+	$tag_object = get_taxonomy( $tag );
+	bw_trace2( $tag_object, "tag_object", true );
+}
+	
  
 
 
