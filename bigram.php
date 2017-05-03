@@ -1,17 +1,17 @@
 <?php
 /*
 Plugin Name: bigram
-Plugin URI: http://www.oik-plugins.com/oik-plugins/bigram
+Plugin URI: https://www.oik-plugins.com/oik-plugins/bigram
 Description: Extra processing when creating a bigram post type
-Version: 0.1.3
+Version: 0.1.4
 Author: bobbingwide
-Author URI: http://www.oik-plugins.com/author/bobbingwide
+Author URI: https://www.oik-plugins.com/author/bobbingwide
 Text Domain: oik
 Domain Path: /languages/
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-    Copyright 2015,2016 Bobbing Wide (email : herb@bobbingwide.com )
+    Copyright 2015-2017 Bobbing Wide (email : herb@bobbingwide.com )
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2,
@@ -226,7 +226,8 @@ function bigram_oik_media_create_attachment( $key, $file, $fields, &$validated )
 										 , 'guid' => $file_return['url']
 										 , 'post_date' => $time
 										 );
-	$attachment_id = wp_insert_attachment( $attachment, $file_return['url'] );
+	$attachment_file = bigram_oik_media_attachment_file( $file_return, $time );										 
+	$attachment_id = wp_insert_attachment( $attachment, $attachment_file );
 	require_once(ABSPATH . 'wp-admin/includes/image.php');
 	$attachment_data = wp_generate_attachment_metadata( $attachment_id, $filename );
 	wp_update_attachment_metadata( $attachment_id, $attachment_data );
@@ -236,6 +237,13 @@ function bigram_oik_media_create_attachment( $key, $file, $fields, &$validated )
 	$validated['post_content'] = $post_content;
 	$validated['post_date'] = $time;						
 	$validated['_thumbnail_id'] = $attachment_id;
+}
+
+function bigram_oik_media_attachment_file( $file_return, $time ) {
+	$upload_dir = wp_upload_dir( $time );
+	bw_trace2( $upload_dir, "upload_dir", true, BW_TRACE_DEBUG );
+	$attachment_file = str_replace( $upload_dir['basedir'] . '/', "", $file_return['file'] );
+	return $attachment_file;
 }
 
 /**
