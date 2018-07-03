@@ -1,10 +1,10 @@
 # bigram 
 * Contributors: bobbingwide
-* Donate link: http://www.oik-plugins.com/oik/oik-donate/
+* Donate link: https://www.oik-plugins.com/oik/oik-donate/
 * Tags: specific, behaviour
 * Requires at least: 4.5.2
-* Tested up to: 4.5.2
-* Stable tag: 0.1.3
+* Tested up to: 4.7.3
+* Stable tag: 0.1.4
 * License: GPLv2 or later
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,6 +68,9 @@ And some bits were cribbed from Pictorico... but they don't work well on tablets
 1. None yet
 
 ## Upgrade Notice 
+# 0.1.4 
+For testing on a different site.
+
 # 0.1.3 
 Upgrade to set the bigram date from the original date time of the image
 
@@ -86,20 +89,26 @@ The original site was developed with Drupal.
 
 
 ## Changelog 
+# 0.1.4 
+* Changed: Automaically sets the s-letter and b-letter tags https://github.com/bobbingwide/bigram/issues/10
+* Added: Batch process to set the values for s-letter and b-letter
+* Changed: Hardcode the registration of bigram post type and custom taxonomies
+* Fixed: Correct value being stored in _wp_attached_file https://github.com/bobbingwide/bigram/issues/12
+
 # 0.1.3 
-* Changed: uses oik-media logic to determine the original date time of the image and set the published date of a bigram [github bobbingwide bigram issue 6]
+* Changed: uses oik-media logic to determine the original date time of the image and set the published date of a bigram https://github.com/bobbingwide/bigram/issues/6
 
 # 0.1.2 
-* Changed: Set featured image when a new bigram is created using the [bw_new] form [github bobbingwide bigram issue 6]
+* Changed: Set featured image when a new bigram is created using the [bw_new] form https://github.com/bobbingwide/bigram/issues/6
 
 # 0.1.1 
-* Added: Populate the database with the original bigrams from SB.txt [github bobbingwide bigram issue 1]
-* Added: Repopulate the database with existing images [github bobbingwide bigram issue 2]
-* Added: Latest attached image should be featured image [github bobbingwide bigram issue 2]
-* Added: Batch routine to add an image or bigram [github bobbingwide issue 3]
+* Added: Populate the database with the original bigrams from SB.txt https://github.com/bobbingwide/bigram/issues/1
+* Added: Repopulate the database with existing images https://github.com/bobbingwide/bigram/issues/2
+* Added: Latest attached image should be featured image https://github.com/bobbingwide/bigram/issues/2
+* Added: Batch routine to add an image or bigram https://github.com/bobbingwide/issues/3
 * Changed: Implement 'pre_get_posts' action for bigram
-* Fixed: Rename custom taxonomies [github bobbingwide bigram issue 5]
-* Changed: Validate the [bw_new] form [github bobbingwide bigram issue 6]
+* Fixed: Rename custom taxonomies https://github.com/bobbingwide/bigram/issues/5
+* Changed: Validate the [bw_new] form https://github.com/bobbingwide/bigram/issues/6
 
 # 0.1.0 
 * Tested: With WordPress 4.5.2
