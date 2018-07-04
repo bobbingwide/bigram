@@ -3,8 +3,8 @@ Contributors: bobbingwide
 Donate link: https://www.oik-plugins.com/oik/oik-donate/
 Tags: specific, behaviour
 Requires at least: 4.5.2
-Tested up to: 4.7.3
-Stable tag: 0.1.4
+Tested up to: 4.9.6
+Stable tag: 0.1.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,6 +68,9 @@ And some bits were cribbed from Pictorico... but they don't work well on tablets
 1. None yet
 
 == Upgrade Notice ==
+= 0.1.5 = 
+Upgrade for sampled bigrams. 
+
 = 0.1.4 = 
 For testing on a different site. 
 
@@ -89,6 +92,10 @@ The original site was developed with Drupal.
 
 
 == Changelog ==
+= 0.1.5 = 
+* Added: Batch routine to generate sampled bigrams [github bobbingwide bigram issues 4]
+* Added: Filter processing to create links for SB's in content [github bobbingwide bigram issues 4]
+
 = 0.1.4 =
 * Changed: Automaically sets the s-letter and b-letter tags [github bobbingwide bigram issues 10]
 * Added: Batch process to set the values for s-letter and b-letter

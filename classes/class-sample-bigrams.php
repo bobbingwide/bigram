@@ -28,12 +28,16 @@ class sample_bigrams {
 	 * 
 	 */
 	function __construct() {
-		oik_require( "includes/bw_posts.php" );
 		$this->mapping = array();
 		$this->already_mapped = 0;
 		$this->posts = null;
+		
+	}
+	
+	function reset_sampled() {
 		$this->sampled = array();
 	}
+		
 	
 	/**
 	 * Load all the bigram posts
@@ -41,6 +45,7 @@ class sample_bigrams {
 	 * There are thousands
 	 */
 	function load() {
+		oik_require( "includes/bw_posts.php" );
 		$args = array( "post_type" => "bigram" 
 								 , "numberposts" => -1
 								 , "orderby" => "date"
@@ -118,6 +123,7 @@ class sample_bigrams {
 	}
 	
 	function process() {
+		$this->reset_sampled();
 		foreach ( $this->posts as $post ) {	
 			$this->sampled = array(); 
 			$this->sample( $post );
@@ -141,6 +147,11 @@ class sample_bigrams {
 	function sample( $post ) {
 		echo "Processing {$post->ID} {$post->post_title}" . PHP_EOL;
 		$content = $post->post_content;
+		$content = $this->process_contents( $content );
+		//$this->update( $post, $contents );
+	}
+	
+	function process_contents( $content ) { 
 		$contents = explode( " ", $content );
 		//print_r( $contents );
 		$sword_index = null;
@@ -161,7 +172,23 @@ class sample_bigrams {
 					$sword_index = null;
 			}
 		}
-		$this->update( $post, $contents );
+		$content = implode( " ", $contents );
+		$content = str_replace( "</a> ", "</a>", $content );
+		return $content;
+	}
+	
+	/** 
+	 * Implements 'the_content' filter 
+	 * 
+	 * Converts SB's to links
+	 * 
+	 * @param string $content
+	 * @return string converted content
+	 */
+	function the_content( $content ) {
+		$this->reset_sampled();
+		$content = $this->process_contents( $content ); 
+		return $content;
 	}
 	
 	function report() {
@@ -183,16 +210,24 @@ class sample_bigrams {
 		$this->remove_bword( $contents, $sword_index, $sword, $bword );
 	}
 	
+	/**
+	 * Adds a sampled bigram to the sampled array
+	 */
 	function add_sampled( $sword, $bword ) {
-		echo "$sword $bword" . PHP_EOL;
 		$this->sampled["$sword $bword"] = array( 'sword' => $sword, 'bword' => $bword );
 	}
 	
+	/**
+	 * Gets an S or B word
+	 * 
+	 * @TODO Check it works for single letter words.
+	 * Check if any words contain numbers, hyphens or other strange things
+	 * 
+	 * @param string $sbwordystuff 
+	 * @return string the S or B word
+	 */
 	function get_sbword( $sbwordystuff ) {
-		//echo $sbwordystuff . PHP_EOL;
 		$bwords = preg_match( "/[sSbB]([a-zA-Z'])+/", $sbwordystuff, $words );
-		//echo $bwords;
-		//print_r( $words );
 		$sbword = strtolower( $words[0] );
 		return $sbword;
 	}
@@ -213,16 +248,28 @@ class sample_bigrams {
 		$link_text .= substr( $contents[ $sword_index+1 ], 0, strlen( $bword ) );
 		$url = site_url( "/bigram/$sword-$bword", "https" );
 		$link = retlink( null, $url, $link_text );
-		echo $link . PHP_EOL;
+		//echo $link . PHP_EOL;
 		$contents[ $sword_index ] = $link;  
 	}
 	
+	/**
+	 * Removes the bword from contents
+	 * 
+	 * bwords may be followed by HTML ( e.g. Silver Bullet<!--more--> )
+	 * we need to remove the bword - it's already part of the sword link
+	 * 
+	 * @param array $contents array of words
+	 * @param string $sword_index
+	 * @param string $sword
+	 * @param string $bword
+	 */
 	function remove_bword( &$contents, $sword_index, $sword, $bword ) {
 		$bword_index = $sword_index + 1;
 		$new_bword = $contents[ $bword_index ] ;
 		$new_bword = substr( $new_bword, strlen( $bword ) );
 		$contents[ $bword_index ] = $new_bword;
-		echo $new_bword;
+		//echo $new_bword;
+		bw_trace2( $new_bword, "new_bword", false );
 	}
 	
 	/**

@@ -3,7 +3,7 @@
 Plugin Name: bigram
 Plugin URI: https://www.oik-plugins.com/oik-plugins/bigram
 Description: Extra processing when creating a bigram post type
-Version: 0.1.4
+Version: 0.1.5
 Author: bobbingwide
 Author URI: https://www.oik-plugins.com/author/bobbingwide
 Text Domain: oik
@@ -44,6 +44,7 @@ function bigram_loaded() {
 	add_filter( "bw_field_validation_post_content", "bigram_validate_post_content", 10, 3 );
 	add_filter( "oik_add_new_validate", "bigram_add_new_validate", 10, 4 );
 	add_action( "oik_fields_loaded", "bigram_oik_fields_loaded" );
+	add_filter( "the_content", "bigram_the_content", 20 );
 }
 
 /**
@@ -408,6 +409,25 @@ function bigram_check_post_type_object( $post_type ) {
 function bigram_check_tag_object( $tag ) {
 	$tag_object = get_taxonomy( $tag );
 	bw_trace2( $tag_object, "tag_object", true );
+}
+
+/**
+ * Implements 'the_content' filter 
+ * 
+ * Converts SB's to links
+ * @param string $content
+ * @return string updated post content 
+ */
+function bigram_the_content( $content ) {
+	static $sample_bigrams = null;
+	if ( !$sample_bigrams ) {
+		oik_require( "classes/class-sample-bigrams.php", "bigram" );
+		$sample_bigrams = new sample_bigrams();
+	}
+	if ( $sample_bigrams ) {
+		$content = $sample_bigrams->the_content( $content );
+	}
+	return $content;
 }
 	
  
