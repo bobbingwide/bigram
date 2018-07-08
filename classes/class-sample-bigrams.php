@@ -22,6 +22,7 @@ class sample_bigrams {
 	public $mapping;
 	public $already_mapped;
 	public $sampled;
+	public $default_category;
 	
 	
 	/**
@@ -54,6 +55,13 @@ class sample_bigrams {
 		$posts = bw_get_posts( $args );
 		echo count( $posts ) . PHP_EOL;
 		$this->posts = $posts;
+	}
+	
+	function get_default_category() {
+		//$this->default_category = 2147;
+		$this->default_category = get_term_by( "slug", "sampled-bigram", "category" );
+		//print_r( $this->default_category );
+		
 	}
 	
 	/**
@@ -127,7 +135,9 @@ class sample_bigrams {
 		foreach ( $this->posts as $post ) {	
 			$this->sampled = array(); 
 			$this->sample( $post );
-			print_r( $this->sampled );
+			if ( count( $this->sampled ) ) {
+				print_r( $this->sampled );
+			}
 			
 			foreach ( $this->sampled as $key => $sample ) {
 				$sword = $sample[ 'sword' ];
@@ -148,7 +158,7 @@ class sample_bigrams {
 		echo "Processing {$post->ID} {$post->post_title}" . PHP_EOL;
 		$content = $post->post_content;
 		$content = $this->process_contents( $content );
-		//$this->update( $post, $contents );
+		$this->update( $post, $content );
 	}
 	
 	function process_contents( $content ) { 
@@ -273,13 +283,34 @@ class sample_bigrams {
 	}
 	
 	/**
-	 * Updates the post if the contents is now different
+	 * Updates the post
 	 * 
-	 * We have to ensure that we don't intercept save_post
-	 * and end up in a loop. 
+	 * We pass the new contents, in case it might be useful.
+	 * But the current logic is that we don't create links since this can be done dynamically in the front end.
+	 * What we do need to do is to set the category for "Sampled Bigram".
+	 * We also have to ensure that we don't intercept save_post and end up in a loop.
+	 *
+	 * @param object $post 
+	 * @param string $contents
 	 */
 	function update( $post, $contents ) {
+		$this->set_default_category( $post );
 	
+	
+	}
+	
+	/**
+	 * Sets the default category to "Sampled Bigram"
+	 */
+	function set_default_category( $post ) {
+		$terms = wp_get_object_terms( $post->ID, "category" );
+		if ( 0 == count( $terms ) ) {
+			wp_add_object_terms( $post->ID, "sampled-bigram", "category" );
+			echo "Sampled Bigram: " . $post->post_title . PHP_EOL;
+		} else {
+			//print_r( $terms );
+		}
+			
 	
 	}
 	
