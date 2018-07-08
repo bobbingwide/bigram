@@ -30,7 +30,9 @@ function bigram_wp_admin_prereq() {
 }	
  
 /**
- * Function to invoke when bigram-image-loader is loaded	 
+ * Function to invoke when bigram-image-loader is loaded	
+ * 
+ * Note: Image files are now in C:\apache\htdocs\bigram-renamed\images 
  */ 															 
 function bigram_image_loader_loaded() {
 	oik_require( "classes/class-sb.php", "bigram" );
