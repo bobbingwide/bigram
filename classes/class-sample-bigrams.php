@@ -161,6 +161,14 @@ class sample_bigrams {
 		$this->update( $post, $content );
 	}
 	
+	/**
+	 * Processes content looking for SB pairs
+	 * 
+	 * @TODO Needs to ignore HTML attributes.
+	 * 
+	 * @param string $content
+	 * @return string processed contents
+	 */
 	function process_contents( $content ) { 
 		$contents = explode( " ", $content );
 		//print_r( $contents );
@@ -237,7 +245,7 @@ class sample_bigrams {
 	 * @return string the S or B word
 	 */
 	function get_sbword( $sbwordystuff ) {
-		$bwords = preg_match( "/[sSbB]([a-zA-Z'])+/", $sbwordystuff, $words );
+		$bwords = preg_match( "/[sSbB]([a-zA-Z'])*/", $sbwordystuff, $words );
 		$sbword = strtolower( $words[0] );
 		return $sbword;
 	}
@@ -257,6 +265,7 @@ class sample_bigrams {
 		$link_text .= " ";
 		$link_text .= substr( $contents[ $sword_index+1 ], 0, strlen( $bword ) );
 		$url = site_url( "/bigram/$sword-$bword", "https" );
+		$url = "https://bigram.co.uk/bigram/$sword-$bword" ;
 		$link = retlink( null, $url, $link_text );
 		//echo $link . PHP_EOL;
 		$contents[ $sword_index ] = $link;  
