@@ -45,6 +45,7 @@ function bigram_loaded() {
 	add_filter( "oik_add_new_validate", "bigram_add_new_validate", 10, 4 );
 	add_action( "oik_fields_loaded", "bigram_oik_fields_loaded" );
 	add_filter( "the_content", "bigram_the_content", 20 );
+	add_filter( "genesis_term_intro_text_output", "bigram_the_content", 20 );
 }
 
 /**
@@ -356,6 +357,7 @@ function bigram_map_second_letter( $field ) {
 function bigram_oik_fields_loaded() {
 	bigram_register_taxonomies();
 	bigram_register_bigram();
+	bigram_register_seen_before();
 	
 	bigram_check_post_type_object( "bigram" );
 
@@ -399,6 +401,11 @@ function bigram_register_bigram() {
 	
 	
 
+}
+
+function bigram_register_seen_before() {
+  bw_register_field( "_seen_before", "numeric", "Seen before", array( '#theme' => false, '#form' => false ) );
+	bw_register_field_for_object_type("_seen_before", "bigram" );
 }
 
 function bigram_check_post_type_object( $post_type ) {
