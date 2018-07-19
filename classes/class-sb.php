@@ -1,4 +1,4 @@
-<?php // (C) Copyright Bobbing Wide 2016
+<?php // (C) Copyright Bobbing Wide 2016-2018
 
 /**
  * Class SB - Implements the SB bigrams
@@ -499,6 +499,10 @@ Sabena Bus              b   found at Brussels Airport
 	 */
 	function set_featured_image( $id, $attachment_id ) {
 		//update_post_meta( $id, "_thumbnail_id", $attachment_id );
+		bw_backtrace();
+		if ( $attachment_id < 2 ) {
+			gob();
+		}
 		set_post_thumbnail( $id, $attachment_id );
 	}
 
