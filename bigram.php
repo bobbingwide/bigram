@@ -47,6 +47,7 @@ function bigram_loaded() {
 	add_action( "oik_fields_loaded", "bigram_oik_fields_loaded" );
 	add_filter( "the_content", "bigram_the_content", 20 );
 	add_filter( "genesis_term_intro_text_output", "bigram_the_content", 20 );
+	add_filter( "request", "bigram_request" );
 }
 
 /**
@@ -78,8 +79,8 @@ function bigram_save_fields() {
  * @param bool $update 
  */
 function bigram_wp_insert_post( $post_ID, $post, $update ) {
-  bw_trace2(); 
-	bw_backtrace();
+  //bw_trace2(); 
+	//bw_backtrace();
   $status = $post->post_status;
   $post_type = $post->post_type; 
   if ( $status != "auto-draft" && $post_type == "bigram" ) {
@@ -105,13 +106,15 @@ function bigram_wp_insert_post( $post_ID, $post, $update ) {
 		if ( $thumbnail_id > 1 ) {
 			update_post_meta( $post_ID, "_thumbnail_id", $thumbnail_id );
 		}
+		
+		// @TODO Where should this go?
 		unset( $_POST['_thumbnail_id' ] );
+		unset( $_POST['_seen_before' ] );
   }
 }
 
-
 /**
- * Implement 'wp_insert_post' for bigrams to sample bigrams
+ * Implements 'wp_insert_post' for bigrams to sample bigrams
  *
  * 
  * @param ID $post_ID
@@ -119,8 +122,8 @@ function bigram_wp_insert_post( $post_ID, $post, $update ) {
  * @param bool $update 
  */
 function bigram_wp_insert_post_sample_bigrams( $post_ID, $post, $update ) {
-  bw_trace2(); 
-	bw_backtrace();
+  //bw_trace2(); 
+	//bw_backtrace();
 	
   $status = $post->post_status;
   $post_type = $post->post_type; 
@@ -459,6 +462,60 @@ function bigram_the_content( $content ) {
 		$content = $sample_bigrams->the_content( $content );
 	}
 	return $content;
+}
+
+/**
+ * Filters the request to reduce 404s
+ 
+ *
+ 
+    [page] => 
+    [bigram] => self-bio
+    [post_type] => bigram
+    [name] => self-bio
+		[pagename] = 
+		
+		/bigram/submit%20bigram
+
+)
+ * 
+ * @param arary $request
+ * @return array modified request
+ */
+function bigram_request( $request ) {
+	bw_trace2();
+	$post_type = bw_array_get( $request, "post_type", null );
+	$name = bw_array_get( $request, "name", null );
+	$name = str_replace( "%20", "-", $name );
+	
+	if ( $post_type == 'bigram' ) {
+		$request[ 'bigram' ] = $name;
+		$request[ 'name' ] = $name;
+		
+	}
+	
+	if ( !$post_type ) {
+		if ( $name ) { 
+			$name = strtolower( $name );
+			$words = explode( "-", $name );
+			if ( 2 == count( $words ) ) {
+				
+				$sword = $words[0][0] == 's';
+				$bword = $words[1][0] == 'b';
+				if ( $sword && $bword ) {
+					$request['name'] = $name;
+					$request['post_type'] = 'bigram';
+					// $request['bigram'] = $name;
+				}
+			}
+			
+			
+			//gob();
+		}
+	}
+	
+	
+	return $request;
 }
 	
  
