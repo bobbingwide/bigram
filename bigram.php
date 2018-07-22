@@ -11,7 +11,7 @@ Domain Path: /languages/
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-    Copyright 2015-2017 Bobbing Wide (email : herb@bobbingwide.com )
+    Copyright 2015-2018 Bobbing Wide (email : herb@bobbingwide.com )
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2,
@@ -34,7 +34,8 @@ bigram_loaded();
  * Function invoked when bigram is loaded 
  */													
 function bigram_loaded() {
-	add_action( "wp_insert_post", "bigram_wp_insert_post", 10, 3 ); 
+	add_action( "wp_insert_post", "bigram_wp_insert_post", 10, 3 );
+	add_action( "wp_insert_post", "bigram_wp_insert_post_sample_bigrams", 10, 3 ); 
 	add_action( "pre_get_posts", "bigram_pre_get_posts" );
 	add_action( "run_bigram.php", "bigram_run_bigram" );
 	add_filter( "oik_add_new_format_bigram", "bigram_oik_add_new_format_bigram", 10, 2 );
@@ -101,10 +102,33 @@ function bigram_wp_insert_post( $post_ID, $post, $update ) {
     update_post_meta( $post_ID, "_yoast_wpseo_focuskw", "$title bigram" );
 		bw_trace2( $_POST, "_POST from validated?", false );
 		$thumbnail_id = bw_array_get( $_POST, "_thumbnail_id", null );
-		if ( $thumbnail_id ) {
+		if ( $thumbnail_id > 1 ) {
 			update_post_meta( $post_ID, "_thumbnail_id", $thumbnail_id );
 		}
+		unset( $_POST['_thumbnail_id' ] );
   }
+}
+
+
+/**
+ * Implement 'wp_insert_post' for bigrams to sample bigrams
+ *
+ * 
+ * @param ID $post_ID
+ * @param object $post
+ * @param bool $update 
+ */
+function bigram_wp_insert_post_sample_bigrams( $post_ID, $post, $update ) {
+  bw_trace2(); 
+	bw_backtrace();
+	
+  $status = $post->post_status;
+  $post_type = $post->post_type; 
+  if ( $status != "auto-draft" && $post_type == "bigram" ) {
+		oik_require( "classes/class-sample-bigrams.php", "bigram" );
+		$sample_bigrams = new sample_bigrams();
+		$sample_bigrams->sample_post( $post_ID, $post, $update );
+	}
 }
 
 /**

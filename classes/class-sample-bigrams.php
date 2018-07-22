@@ -43,7 +43,7 @@ class sample_bigrams {
 	/**
 	 * Load all the bigram posts
 	 * 
-	 * There are thousands
+	 * There are thousands. How long does this take? 
 	 */
 	function load() {
 		oik_require( "includes/bw_posts.php" );
@@ -65,7 +65,9 @@ class sample_bigrams {
 	}
 	
 	/**
-	 * Map post titles to ID 
+	 * Map post titles to ID
+	 * 
+	 *  
 	 */ 
 	function map_posts() {
 		foreach ( $this->posts as $post ) {	 
@@ -121,15 +123,26 @@ class sample_bigrams {
 	}
 	
 	/**
+	 * Gets the key for the post_name
+	 */
+	function get_key( $sword, $bword ) {
+		$key = "$sword-$bword";
+		$key = sanitize_title( $key );
+		return $key;
+	}
+	
+	/**
 	 * Gets the mapped ID
 	 */
 	function get_mapping( $sword, $bword ) {
-		$key = "$sword-$bword";
-		$key = sanitize_title( $key );
+		$key = $this->get_key( $sword, $bword );
 		$ID = bw_array_get( $this->mapping, $key, null );
 		return $ID;
 	}
 	
+	/**
+	 * Process the array of posts
+	 */
 	function process() {
 		$this->reset_sampled();
 		foreach ( $this->posts as $post ) {	
@@ -192,6 +205,8 @@ class sample_bigrams {
 		}
 		$content = implode( " ", $contents );
 		$content = str_replace( "</a> ", "</a>", $content );
+		$content = str_replace( " ,", ",", $content );
+		$content = str_replace( " .", ".", $content );
 		return $content;
 	}
 	
@@ -264,9 +279,12 @@ class sample_bigrams {
 		$link_text = $contents[ $sword_index ];
 		$link_text .= " ";
 		$link_text .= substr( $contents[ $sword_index+1 ], 0, strlen( $bword ) );
+		
 		$url = site_url( "/bigram/$sword-$bword", "https" );
-		$url = "https://bigram.co.uk/bigram/$sword-$bword" ;
+		//$url = "https://bigram.co.uk/bigram/$sword-$bword" ;
 		$link = retlink( null, $url, $link_text );
+		
+		//$link = '<em>' . $link_text . '</em>';
 		//echo $link . PHP_EOL;
 		$contents[ $sword_index ] = $link;  
 	}
@@ -298,6 +316,11 @@ class sample_bigrams {
 	 * But the current logic is that we don't create links since this can be done dynamically in the front end.
 	 * What we do need to do is to set the category for "Sampled Bigram".
 	 * We also have to ensure that we don't intercept save_post and end up in a loop.
+	 * 
+	 * Also:
+	 * - correct _thumbnail_id if < 1
+	 * - correct title - if null
+	 * - correct _wp_attached_file
 	 *
 	 * @param object $post 
 	 * @param string $contents
@@ -333,9 +356,35 @@ class sample_bigrams {
 	function maybe_create_sampled_bigram( $post, $sword, $bword ) {
 		$mapped = $this->get_mapping( $sword, $bword );
 		if ( !$mapped ) { 
-			$post = $this->create_sampled_bigram( $post, $sword, $bword );
+			$existing_post = $this->maybe_retrieve_post( $post, $sword, $bword );
+			if ( !$existing_post ) { 
+				$new_post = $this->create_sampled_bigram( $post, $sword, $bword );
+			}
 			$this->map( $post->post_name, $post->ID );
 		}
+	}
+	
+	/**
+	 * Attempts to retrieve the post by post_name
+	 *
+	 */
+	function maybe_retrieve_post( $post, $sword, $bword ) {
+	
+		oik_require( "includes/bw_posts.php" );
+		$post_name = $this->get_key( $sword, $bword );
+		$args = array( "post_type" => "bigram"
+								 , "name" => $post_name
+                 , "numberposts" => 1
+								 , "orderby" => "date"
+								 , "order" => "asc"
+								 );
+		$posts = bw_get_posts( $args );
+		if ( $posts ) {
+			$existing_post = bw_array_get( $posts, 0, null );
+		} else {
+			$existing_post = null;
+		}
+		return $existing_post;
 	}
 	
 	/**
@@ -366,6 +415,7 @@ class sample_bigrams {
 		$sampled_post = null;
 		if ( $ID ) {
 			$sampled_post = get_post( $ID );
+			$this->set_default_category( $sampled_post );
 		} else {
 			echo "Failed to create the sampled post" . PHP_EOL;
 			gob();
@@ -383,6 +433,31 @@ class sample_bigrams {
 		$post_title .= " ";
 		$post_title .= ucfirst( $bword );
 		return $post_title;
+	}
+	
+	/**
+	 * Samples a post after insert / update
+	 *
+	 * - If it's an insert then we might not want to sample. @TODO Check this.
+	 * - If it's already a sample then we don't want to sample it again.
+	 * - This tries to avoid multiple inserts.
+	 * - Think about attachment IDs - should they be populated to mapped posts.
+	 * 
+	 * 
+	 * @param integer $post_ID ID of the post
+	 * @param object $post
+	 * @param bool $update
+   */
+	function sample_post( $post_ID, $post, $update ) {
+		bw_trace2();
+		if ( $update ) {
+			if ( false === strpos( $post->post_content, "<!--more-->Sampled from" ) ) {
+				$this->posts = array( $post );
+				$this->map_posts();
+				$this->process();
+			}
+		}
+		
 	}
 
 
