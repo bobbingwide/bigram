@@ -3,8 +3,8 @@ Contributors: bobbingwide
 Donate link: https://www.oik-plugins.com/oik/oik-donate/
 Tags: specific, behaviour
 Requires at least: 4.5.2
-Tested up to: 4.9.6
-Stable tag: 0.2.0
+Tested up to: 4.9.7
+Stable tag: 0.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,6 +68,9 @@ And some bits were cribbed from Pictorico... but they don't work well on tablets
 1. None yet
 
 == Upgrade Notice ==
+= 0.2.1 =
+Upgrade for improved saving of drafts. 
+
 = 0.2.0 = 
 Upgrade for sampled bigrams. 
 
@@ -92,6 +95,8 @@ The original site was developed with Drupal.
 
 
 == Changelog ==
+= 0.2.1 = 
+* Changed: Attempt to avoid problems during heartbeat saving of drafts 
 
 = 0.2.0 = 
 * Added: Add _seen_before post meta field to bigram post type. 
