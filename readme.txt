@@ -4,7 +4,7 @@ Donate link: https://www.oik-plugins.com/oik/oik-donate/
 Tags: specific, behaviour
 Requires at least: 4.5.2
 Tested up to: 4.9.6
-Stable tag: 0.1.5
+Stable tag: 0.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,7 +68,7 @@ And some bits were cribbed from Pictorico... but they don't work well on tablets
 1. None yet
 
 == Upgrade Notice ==
-= 0.1.5 = 
+= 0.2.0 = 
 Upgrade for sampled bigrams. 
 
 = 0.1.4 = 
@@ -92,15 +92,24 @@ The original site was developed with Drupal.
 
 
 == Changelog ==
-= 0.1.5 = 
+
+= 0.2.0 = 
+* Added: Add _seen_before post meta field to bigram post type. 
+* Added: Automatically create new SBs on save [github bobbingwide bigram issue 4]
 * Added: Batch routine to generate sampled bigrams [github bobbingwide bigram issues 4]
+* Added: Filter genesis_term_intro_text_output
 * Added: Filter processing to create links for SB's in content [github bobbingwide bigram issues 4]
+* Added: Make it easier to find bigrams by filtering 'request' [github bobbingwide bigram issue 15]
+* Changed: Set default category to 'sampled-bigram' on existing posts
+* Changed: Try to catch the place where attachments with funny IDs are created
+* Tested: WordPress 4.9.7 
 
 = 0.1.4 =
 * Changed: Automaically sets the s-letter and b-letter tags [github bobbingwide bigram issues 10]
 * Added: Batch process to set the values for s-letter and b-letter
 * Changed: Hardcode the registration of bigram post type and custom taxonomies
 * Fixed: Correct value being stored in _wp_attached_file [github bobbingwide bigram issues 12]
+* Tested: Tested up to WordPress 4.7.3 2017/05/03
  
 = 0.1.3 =
 * Changed: uses oik-media logic to determine the original date time of the image and set the published date of a bigram [github bobbingwide bigram issue 6]

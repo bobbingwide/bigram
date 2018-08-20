@@ -23,6 +23,7 @@ class sample_bigrams {
 	public $already_mapped;
 	public $sampled;
 	public $default_category;
+	public $echo;
 	
 	
 	/**
@@ -32,11 +33,28 @@ class sample_bigrams {
 		$this->mapping = array();
 		$this->already_mapped = 0;
 		$this->posts = null;
+		$this->echo = false;
 		
 	}
 	
 	function reset_sampled() {
 		$this->sampled = array();
+	}
+	
+	/**
+	 * Sets echoing for batch
+	 *
+	 * @param bool Set to true when echoing is required
+	 */
+	function set_echo( $echo=true ) {
+		$this->echo = $echo;
+	}
+	
+	function echo( $string ) {
+		if ( $this->echo ) {
+			echo $string;
+			echo PHP_EOL; 
+		}
 	}
 		
 	
@@ -53,7 +71,7 @@ class sample_bigrams {
 								 , "order" => "asc"
 								 );
 		$posts = bw_get_posts( $args );
-		echo count( $posts ) . PHP_EOL;
+		$this->echo( count( $posts ) );
 		$this->posts = $posts;
 	}
 	
@@ -73,8 +91,8 @@ class sample_bigrams {
 		foreach ( $this->posts as $post ) {	 
 			$this->map( $post->post_name, $post->ID );
 		}
-		echo count( $this->mapping ) . PHP_EOL;
-		echo $this->already_mapped . PHP_EOL;
+		$this->echo( count( $this->mapping ) );
+		$this->echo( $this->already_mapped );
 	}
 	
 	
@@ -149,7 +167,7 @@ class sample_bigrams {
 			$this->sampled = array(); 
 			$this->sample( $post );
 			if ( count( $this->sampled ) ) {
-				print_r( $this->sampled );
+				$this->echo( print_r( $this->sampled, true ) );
 			}
 			
 			foreach ( $this->sampled as $key => $sample ) {
@@ -168,7 +186,8 @@ class sample_bigrams {
 	 * If the SB is already in a link then we shouldn't need to worry about it.
 	 */
 	function sample( $post ) {
-		echo "Processing {$post->ID} {$post->post_title}" . PHP_EOL;
+		bw_trace2();
+		$this->echo( "Processing {$post->ID} {$post->post_title}" );
 		$content = $post->post_content;
 		$content = $this->process_contents( $content );
 		$this->update( $post, $content );
@@ -338,7 +357,7 @@ class sample_bigrams {
 		$terms = wp_get_object_terms( $post->ID, "category" );
 		if ( 0 == count( $terms ) ) {
 			wp_add_object_terms( $post->ID, "sampled-bigram", "category" );
-			echo "Sampled Bigram: " . $post->post_title . PHP_EOL;
+			$this->echo( "Sampled Bigram: " . $post->post_title );
 		} else {
 			//print_r( $terms );
 		}
@@ -398,7 +417,7 @@ class sample_bigrams {
 	 * @return object the sampled post 
 	 */
 	function create_sampled_bigram( $post, $sword, $bword ) {
-		echo "Creating sampled bigram: $sword $bword" . PHP_EOL;
+		$this->echo( "Creating sampled bigram: $sword $bword" );
 		$content = $this->post_content( $post ); 		
 		$title = $this->post_title( $sword, $bword );
 		$sampled = array( "post_author" => $post->post_author
@@ -417,8 +436,9 @@ class sample_bigrams {
 			$sampled_post = get_post( $ID );
 			$this->set_default_category( $sampled_post );
 		} else {
-			echo "Failed to create the sampled post" . PHP_EOL;
-			gob();
+			$this->echo( "Failed to create the sampled post" );
+			bw_trace2( "gob()" );
+			
 		}
 		return $sampled_post;
 	}

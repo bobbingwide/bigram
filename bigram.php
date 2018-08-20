@@ -3,7 +3,7 @@
 Plugin Name: bigram
 Plugin URI: https://www.oik-plugins.com/oik-plugins/bigram
 Description: Extra processing when creating a bigram post type
-Version: 0.1.5
+Version: 0.2.0
 Author: bobbingwide
 Author URI: https://www.oik-plugins.com/author/bobbingwide
 Text Domain: oik
@@ -116,6 +116,7 @@ function bigram_wp_insert_post( $post_ID, $post, $update ) {
 /**
  * Implements 'wp_insert_post' for bigrams to sample bigrams
  *
+ * Avoids doing anything silly during autosaves being performed in AJAX requets.
  * 
  * @param ID $post_ID
  * @param object $post
@@ -124,6 +125,9 @@ function bigram_wp_insert_post( $post_ID, $post, $update ) {
 function bigram_wp_insert_post_sample_bigrams( $post_ID, $post, $update ) {
   //bw_trace2(); 
 	//bw_backtrace();
+	if ( wp_doing_ajax() ) {
+		return;
+	}
 	
   $status = $post->post_status;
   $post_type = $post->post_type; 

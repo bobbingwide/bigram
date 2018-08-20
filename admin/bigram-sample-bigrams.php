@@ -25,6 +25,7 @@ if ( PHP_SAPI !== "cli" ) {
 function bigram_sample_bigrams() {
 	oik_require( "classes/class-sample-bigrams.php", "bigram" );
 	$sample_bigrams = new sample_bigrams();
+	$sample_bigrams->set_echo( true );
 	$sample_bigrams->get_default_category();
 	$sample_bigrams->load();
 	$sample_bigrams->map_posts();
