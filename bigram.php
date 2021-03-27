@@ -435,7 +435,7 @@ function bigram_register_bigram() {
 }
 
 function bigram_register_seen_before() {
-  bw_register_field( "_seen_before", "numeric", "Seen before", array( '#theme' => false, '#form' => false ) );
+  bw_register_field( "_seen_before", "numeric", "Seen before", array( '#theme' => true, '#form' => false ) );
 	bw_register_field_for_object_type("_seen_before", "bigram" );
 }
 
