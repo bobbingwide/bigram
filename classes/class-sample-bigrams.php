@@ -203,25 +203,44 @@ class sample_bigrams {
 	 */
 	function process_contents( $content ) { 
 		$contents = explode( " ", $content );
-		//print_r( $contents );
+		//bw_trace2( $contents, "contents", false);
 		$sword_index = null;
+		$waitforgt = false;
 		foreach ( $contents as $index => $word ) {
 			$char = strtolower( substr( $word, 0, 1 ) );
 			switch ( $char ) {
+				case '<':
+					$waitforgt = true;
+					$sword_index = null;
+				break;
+
 				case 'b':
 					if ( $sword_index !== null ) {
+						//bw_trace2( $sword_index, "!$word $sword_index^", false );
 						$this->make_link( $contents, $sword_index );
 					}
 					$sword_index = null;
 				break;
+
 				case 's':
-					$sword_index = $index;
+					if ( !$waitforgt ) {
+						//bw_trace2( $index, "index of s", false );
+						$sword_index = $index;
+					}
 				break;
 						
 				default:
-					$sword_index = null;
+					$sword_index=null;
+
+			}
+			if ( $waitforgt ) {
+				$pos=strpos( $word, '>' );
+				if ( false !== $pos && false === strpos( $word, '<' ) ) {
+					$waitforgt = false;
+				}
 			}
 		}
+
 		$content = implode( " ", $contents );
 		$content = str_replace( "</a> ", "</a>", $content );
 		$content = str_replace( " ,", ",", $content );
@@ -279,7 +298,9 @@ class sample_bigrams {
 	 * @return string the S or B word
 	 */
 	function get_sbword( $sbwordystuff ) {
+		//bw_trace2( $sbwordystuff, "sbwordystuff", false );
 		$bwords = preg_match( "/[sSbB]([a-zA-Z'])*/", $sbwordystuff, $words );
+		//if ( count( $words )) {
 		$sbword = strtolower( $words[0] );
 		return $sbword;
 	}
