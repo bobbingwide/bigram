@@ -31,11 +31,11 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 bigram_loaded();
 
 /**
- * Function invoked when bigram is loaded 
- */													
+ * Function invoked when bigram is loaded
+ */
 function bigram_loaded() {
 	add_action( "wp_insert_post", "bigram_wp_insert_post", 10, 3 );
-	add_action( "wp_insert_post", "bigram_wp_insert_post_sample_bigrams", 10, 3 ); 
+	add_action( "wp_insert_post", "bigram_wp_insert_post_sample_bigrams", 10, 3 );
 	add_action( "pre_get_posts", "bigram_pre_get_posts" );
 	add_action( "run_bigram.php", "bigram_run_bigram" );
 	add_filter( "oik_add_new_format_bigram", "bigram_oik_add_new_format_bigram", 10, 2 );
@@ -48,24 +48,25 @@ function bigram_loaded() {
 	add_filter( "the_content", "bigram_the_content", 20 );
 	add_filter( "genesis_term_intro_text_output", "bigram_the_content", 20 );
 	add_filter( "request", "bigram_request" );
+	add_action( 'init', 'bigram_block_block_init' );
 }
 
 /**
  * Set bigram fields when creating/updating a post
- * 
+ *
  * Title expected to be Sxxx Bxxxx
- * 
+ *
  * - first word (S-word) used for the S tag
  * - second word (B-word) used for the B tag
  * - WordPress SEO keyword: S-word B-word bigram
- * - Meta description set to: $title - another SB bi-gram 
- * - 
+ * - Meta description set to: $title - another SB bi-gram
+ * -
  */
 function bigram_save_fields() {
-  $args['tax_input'] = array( "s-word" => $sword 
-                            , "b-word" => $bword 
+  $args['tax_input'] = array( "s-word" => $sword
+                            , "b-word" => $bword
                             );
-  return( $post );                            
+  return( $post );
 }
 
 /**
@@ -73,16 +74,16 @@ function bigram_save_fields() {
  *
  * It's too late to manipulate the content when the post has been created.
  * Some of the fields are now in $_POST?
- * 
+ *
  * @param ID $post_ID
  * @param object $post
- * @param bool $update 
+ * @param bool $update
  */
 function bigram_wp_insert_post( $post_ID, $post, $update ) {
-  //bw_trace2(); 
+  //bw_trace2();
 	//bw_backtrace();
   $status = $post->post_status;
-  $post_type = $post->post_type; 
+  $post_type = $post->post_type;
   if ( $status != "auto-draft" && $post_type == "bigram" ) {
     $title = $post->post_title;
     list( $sword, $bword ) = explode(" ", $title . " . . ");
@@ -92,13 +93,13 @@ function bigram_wp_insert_post( $post_ID, $post, $update ) {
     bw_trace2( $bword, "bword", false );
     wp_set_post_terms( $post_ID, $sword, "s-word" );
     wp_set_post_terms( $post_ID, $bword, "b-word" );
-		
+
 		$s_letter = bigram_map_second_letter( $sword );
-		
+
     wp_set_post_terms( $post_ID, $s_letter, "s-letter" );
 		$b_letter = bigram_map_second_letter( $bword );
     wp_set_post_terms( $post_ID, $b_letter, "b-letter" );
-		
+
     update_post_meta( $post_ID, "_yoast_wpseo_metadesc", "$title - another SB bi-gram" );
     update_post_meta( $post_ID, "_yoast_wpseo_focuskw", "$title bigram" );
 		bw_trace2( $_POST, "_POST from validated?", false );
@@ -106,7 +107,7 @@ function bigram_wp_insert_post( $post_ID, $post, $update ) {
 		if ( $thumbnail_id > 1 ) {
 			update_post_meta( $post_ID, "_thumbnail_id", $thumbnail_id );
 		}
-		
+
 		// @TODO Where should this go?
 		unset( $_POST['_thumbnail_id' ] );
 		unset( $_POST['_seen_before' ] );
@@ -117,20 +118,20 @@ function bigram_wp_insert_post( $post_ID, $post, $update ) {
  * Implements 'wp_insert_post' for bigrams to sample bigrams
  *
  * Avoids doing anything silly during autosaves being performed in AJAX requets.
- * 
+ *
  * @param ID $post_ID
  * @param object $post
- * @param bool $update 
+ * @param bool $update
  */
 function bigram_wp_insert_post_sample_bigrams( $post_ID, $post, $update ) {
-  //bw_trace2(); 
+  //bw_trace2();
 	//bw_backtrace();
 	if ( wp_doing_ajax() ) {
 		return;
 	}
-	
+
   $status = $post->post_status;
-  $post_type = $post->post_type; 
+  $post_type = $post->post_type;
   if ( $status != "auto-draft" && $post_type == "bigram" ) {
 		oik_require( "classes/class-sample-bigrams.php", "bigram" );
 		$sample_bigrams = new sample_bigrams();
@@ -144,16 +145,16 @@ function bigram_wp_insert_post_sample_bigrams( $post_ID, $post, $update ) {
  * Updates the array of post types which can be displayed on the page that's showing the blog posts.
  * i.e. The home page, as opposed to the front page.
  *
- * Notes: 
- * - You can't check for main query in "pre_get_posts" 
+ * Notes:
+ * - You can't check for main query in "pre_get_posts"
  * - You can't use WP_Query::is_main_query() either
  * - You can't check is_home() in pre_get_posts for other reasons
  * - Assumes that the "post" post type, for blog posts, will always be included.
  * - Once we've run the main query we don't need this filter any more.
- 
- * 
+
+ *
  * @param WP_Query $query - the query object for the current query
- * @return WP_Query - the updated query object 
+ * @return WP_Query - the updated query object
  */
 function bigram_pre_get_posts( $query ) {
 	bw_trace2();
@@ -162,7 +163,7 @@ function bigram_pre_get_posts( $query ) {
 		/*
 		global $wp_post_types;
 		foreach ( $wp_post_types as $post_type => $data ) {
-		
+
 			//$supports = post_type_supports( $post_type, "home" );
 			//if ( $supports ) {
 				$post_types[] = $post_type;
@@ -179,7 +180,7 @@ function bigram_pre_get_posts( $query ) {
 }
 
 /**
- * Implement "run_bigram.php" for bigram 
+ * Implement "run_bigram.php" for bigram
  */
 function bigram_run_bigram() {
 	oik_require( "admin/bigram-run-bigram.php", "bigram" );
@@ -191,8 +192,8 @@ function bigram_run_bigram() {
  *
  * We don't need the post_title field since we'll create this automatically from the s-word and b-word
  * ... but when
- * 
- * @param string $format 
+ *
+ * @param string $format
  * @param string $post_type
  * @return string the required format
  *
@@ -204,7 +205,7 @@ function bigram_oik_add_new_format_bigram( $format, $post_type ) {
 /**
  * Validate and create the media attachment
  *
- * ` 
+ * `
      [0] => file
     [1] => Array
         (
@@ -225,13 +226,13 @@ function bigram_oik_add_new_format_bigram( $format, $post_type ) {
         (
         )
  * `
- * 
+ *
  * @param string $key - the field name used for the file
  * @param array $file - a PHP file structure: name, type, tmp_name, error, size
  * @param array $fields - the field names
  * @param array $validated - validation status
 
- */ 
+ */
 function bigram_oik_media_create_attachment( $key, $file, $fields, &$validated ) {
 	bw_trace2();
 	$s_word = bw_array_get( $_REQUEST, "s-word", null );
@@ -245,9 +246,9 @@ function bigram_oik_media_create_attachment( $key, $file, $fields, &$validated )
 	$post_title = "$s_word $b_word";
 	$post_content = bw_array_get( $_REQUEST, "post_content", null );
 	$file['name'] = "$post_title.jpg";
-	
+
 	$time = bigram_oik_media_get_file_date( $file );
-	
+
 	require_once( ABSPATH . 'wp-admin/includes/admin.php' );
 	$file_return = wp_handle_upload( $file, array('test_form' => false ), $time );
 	bw_trace2( $file_return, "file_return", true, BW_TRACE_DEBUG );
@@ -259,16 +260,16 @@ function bigram_oik_media_create_attachment( $key, $file, $fields, &$validated )
 										 , 'guid' => $file_return['url']
 										 , 'post_date' => $time
 										 );
-	$attachment_file = bigram_oik_media_attachment_file( $file_return, $time );										 
+	$attachment_file = bigram_oik_media_attachment_file( $file_return, $time );
 	$attachment_id = wp_insert_attachment( $attachment, $attachment_file );
 	require_once(ABSPATH . 'wp-admin/includes/image.php');
 	$attachment_data = wp_generate_attachment_metadata( $attachment_id, $filename );
 	wp_update_attachment_metadata( $attachment_id, $attachment_data );
 	$file['id'] = $attachment_id;
-	
+
 	$validated['post_title'] = $post_title;
 	$validated['post_content'] = $post_content;
-	$validated['post_date'] = $time;						
+	$validated['post_date'] = $time;
 	$validated['_thumbnail_id'] = $attachment_id;
 }
 
@@ -284,7 +285,7 @@ function bigram_oik_media_attachment_file( $file_return, $time ) {
  *
  * @param $file
  * @return string image date
- */ 
+ */
 function bigram_oik_media_get_file_date( $file ) {
 	//print_r( $file );
 	oik_require( "includes/oik-media-date.php", "oik-media" );
@@ -294,24 +295,24 @@ function bigram_oik_media_get_file_date( $file ) {
 
 /**
  * Validate the s-word
- * 
+ *
  * @param string $value trimmed and stripslashed value for the s-word
  * @param string $field field name
  * @param array $data field type definition
  */
-function bigram_validate_s_word( $value, $field, $data ) { 
+function bigram_validate_s_word( $value, $field, $data ) {
 	$value = bigram_validate_a_word( $value, $field, $data, 'S' );
 	return( $value );
 }
 
 /**
  * Validate the b-word
- * 
+ *
  * @param string $value trimmed and stripslashed value for the s-word
  * @param string $field field name
  * @param array $data field type definition
  */
-function bigram_validate_b_word( $value, $field, $data ) { 
+function bigram_validate_b_word( $value, $field, $data ) {
 	$value = bigram_validate_a_word( $value, $field, $data, 'B' );
 	return( $value );
 }
@@ -319,21 +320,21 @@ function bigram_validate_b_word( $value, $field, $data ) {
 
 /**
  * Validate the word starts with the given letter
- * 
+ *
  * @param string $value trimmed and stripslashed value for the s-word
  * @param string $field field name
  * @param array $data field type definition
  * @param string $required_first_letter
  * @return string validated field or null
  */
-function bigram_validate_a_word( $value, $field, $data, $required_first_letter="S" ) { 
+function bigram_validate_a_word( $value, $field, $data, $required_first_letter="S" ) {
 	bw_trace2();
 	$value = strtolower( $value );
 	$value = ucfirst( $value );
-	$first_letter = substr( $value, 0, 1 ); 
+	$first_letter = substr( $value, 0, 1 );
 	if ( $first_letter !== $required_first_letter ) {
-		$value = null; 
-		bw_issue_message( $field, "invalid", "Invalid value for {$data['#title']}. It must start with the letter $required_first_letter", 'error' ); 
+		$value = null;
+		bw_issue_message( $field, "invalid", "Invalid value for {$data['#title']}. It must start with the letter $required_first_letter", 'error' );
 	}
 	return( $value );
 }
@@ -341,11 +342,11 @@ function bigram_validate_a_word( $value, $field, $data, $required_first_letter="
 /**
  * Implement "oik_add_new_validate" to validate the add new form for a bigram
  *
- */ 
+ */
 function bigram_add_new_validate( $valid, $format, $fields, &$validated ) {
 	bw_trace2();
 	bw_backtrace();
-	$post_title = bw_array_get( $validated, "post_title", null ); 
+	$post_title = bw_array_get( $validated, "post_title", null );
 	if ( !$post_title ) {
 		$s_word = bw_array_get( $validated, "s-word", null );
 		$b_word = bw_array_get( $validated, "b-word", null );
@@ -357,18 +358,18 @@ function bigram_add_new_validate( $valid, $format, $fields, &$validated ) {
 
 /**
  * Map the second letter to a term
- * 
+ *
  * - Choose the second non blank value from the field
  * - Simplify accented characters to A..Z
  * - Handle other special characters as we see fit.
- * 
+ *
  * Letter        | Term | Comments
  * -------       | ---- | -------------
- * A..Z          | same | uppercased first character passed through remove_accents() 
+ * A..Z          | same | uppercased first character passed through remove_accents()
  * 0..9          | same |
  * _             | _    | @TODO to be completed
  * [             | [    |
- * anything else | ?    | 
+ * anything else | ?    |
  */
 function bigram_map_second_letter( $field ) {
 	$string = trim( $field );
@@ -380,7 +381,7 @@ function bigram_map_second_letter( $field ) {
 
 /**
  * Implement "oik_fields_loaded" for bigram
- * 
+ *
  * Register the CPTs, Taxonomies and relationships that were previously defined using oik-types
  * but which we now want to associate to the REST API
  *
@@ -389,25 +390,25 @@ function bigram_oik_fields_loaded() {
 	bigram_register_taxonomies();
 	bigram_register_bigram();
 	bigram_register_seen_before();
-	
+
 	bigram_check_post_type_object( "bigram" );
 
 }
 
 /**
  * Register the custom taxonomies used by bigram
- * 
+ *
  */
-function bigram_register_taxonomies() { 
+function bigram_register_taxonomies() {
 	$tags = array( "s-word", "b-word", "s-letter", "b-letter" );
 	foreach ( $tags as $tag ) {
 		$args = array( "show_in_rest" => true
 								 , "rest_base"  => $tag
 								 , "rest_controller_class" => 'WP_REST_Terms_Controller'
-								 , "label" => $tag 
+								 , "label" => $tag
 								 );
 		bw_register_custom_tags( $tag, null, $args );
-		
+
 		bigram_check_tag_object( $tag );
 	}
 }
@@ -421,7 +422,7 @@ function bigram_register_bigram() {
   $post_type_args = array();
   $post_type_args['label'] = 'bigrams';
   $post_type_args['description'] = 'Bi-gram - a pair of consecutive written units such as letters, syllables, or words.';
-  $post_type_args['supports'] = array( 'title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'author', 'publicize', 'home' );
+  $post_type_args['supports'] = array( 'title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'author', 'publicize', 'home', 'custom-fields' );
   $post_type_args['taxonomies'] = array( "category", "s-word", "b-word", "s-letter", "b-letter" );
   $post_type_args['has_archive'] = true;
 	$post_type_args['show_in_rest'] = true;
@@ -429,14 +430,44 @@ function bigram_register_bigram() {
 	$post_type_args['rest_controller_class'] = 'WP_REST_Posts_Controller';
   //$post_type_args['menu_icon'] = 'dashicons-admin-';
   bw_register_post_type( $post_type, $post_type_args );
-	
-	
+
+
 
 }
 
 function bigram_register_seen_before() {
   bw_register_field( "_seen_before", "numeric", "Seen before", array( '#theme' => true, '#form' => false ) );
 	bw_register_field_for_object_type("_seen_before", "bigram" );
+	bigram_register_post_meta( '_seen_before', 'bigram', __( 'Seen before', 'bigram') );
+	bigram_register_post_meta( '_seen_before', 'post', __( 'Seen before', 'bigram') );
+}
+
+function bigram_auth_callback() {
+    return current_user_can( 'edit_posts');
+}
+
+/**
+ * Registers the post meta to the REST API.
+ *
+ * register_post_meta() calls register_meta().
+ *
+ * @param $field
+ * @param $post_type
+ */
+function bigram_register_post_meta( $field, $post_type, $description ) {
+    global $wp_meta_keys;
+    bw_trace2( $wp_meta_keys, 'wp_meta_keys before' );
+    $registered =  register_post_meta( $post_type, $field,
+        array('show_in_rest' => true,
+            'single' => true,
+            'type' => 'string',
+            'auth_callback' => 'bigram_auth_callback',
+            'description' => $description
+        )
+    );
+    bw_trace2( $registered, 'registered?', false);
+    bw_trace2( $wp_meta_keys, 'wp_meta_keys after', false );
+
 }
 
 function bigram_check_post_type_object( $post_type ) {
@@ -450,11 +481,11 @@ function bigram_check_tag_object( $tag ) {
 }
 
 /**
- * Implements 'the_content' filter 
- * 
+ * Implements 'the_content' filter
+ *
  * Converts SB's to links
  * @param string $content
- * @return string updated post content 
+ * @return string updated post content
  */
 function bigram_the_content( $content ) {
 	static $sample_bigrams = null;
@@ -470,19 +501,19 @@ function bigram_the_content( $content ) {
 
 /**
  * Filters the request to reduce 404s
- 
+
  *
- 
-    [page] => 
+
+    [page] =>
     [bigram] => self-bio
     [post_type] => bigram
     [name] => self-bio
-		[pagename] = 
-		
+		[pagename] =
+
 		/bigram/submit%20bigram
 
 )
- * 
+ *
  * @param arary $request
  * @return array modified request
  */
@@ -491,19 +522,19 @@ function bigram_request( $request ) {
 	$post_type = bw_array_get( $request, "post_type", null );
 	$name = bw_array_get( $request, "name", null );
 	$name = str_replace( "%20", "-", $name );
-	
+
 	if ( $post_type == 'bigram' ) {
 		$request[ 'bigram' ] = $name;
 		$request[ 'name' ] = $name;
-		
+
 	}
-	
+
 	if ( !$post_type ) {
-		if ( $name ) { 
+		if ( $name ) {
 			$name = strtolower( $name );
 			$words = explode( "-", $name );
 			if ( 2 == count( $words ) ) {
-				
+
 				$sword = $words[0][0] == 's';
 				$bword = $words[1][0] == 'b';
 				if ( $sword && $bword ) {
@@ -512,17 +543,77 @@ function bigram_request( $request ) {
 					// $request['bigram'] = $name;
 				}
 			}
-			
-			
+
+
 			//gob();
 		}
 	}
-	
-	
+
+
 	return $request;
 }
-	
- 
+
+/**
+ * Registers the block using the metadata loaded from the `block.json` file.
+ * Behind the scenes, it registers also all assets so they can be enqueued
+ * through the block editor in the corresponding context.
+ *
+ * @see https://developer.wordpress.org/block-editor/tutorials/block-tutorial/writing-your-first-block-type/
+ */
+function bigram_block_block_init() {
+    $args = [ 'render_callback' => 'bigram_block_dynamic_block'];
+    register_block_type_from_metadata( __DIR__, $args );
+}
 
 
-                                
+function bigram_block_dynamic_block( $attributes ) {
+    $seen_before = bigram_block_increment( '_seen_before' );
+    $html = '<div class="seen-before">';
+    $html .= '<span>';
+    $html .= __( 'Seen before:', 'bigram' );
+    $html .= '</span>';
+    $html .= '<span class="seen-before-value">';
+    $times = _n( '%1$s time', '%1$s times', $seen_before, "bigram" );
+    $html .= sprintf( $times, number_format_i18n( $seen_before ) );
+    $html .= '</div>';
+
+    return $html;
+}
+/**
+ * Increments post meta value
+ * @param string $meta_key Meta key
+ * @return integer Incremented value
+ */
+function bigram_block_increment( $meta_key ) {
+    //bw_trace2();
+    //bw_backtrace();
+    $value = 0;
+    $post = get_post();
+    if (!$post) {
+        return 0;
+    }
+    $value = get_post_meta($post->ID, $meta_key, true);
+    if (false === $value || '' === $value) {
+        $value = 0;
+    }
+
+    // only increment in the front end
+    if ( !bigram_is_rest() && !is_admin() ) {
+
+        $value = $value + 1;
+        update_post_meta($post->ID, $meta_key, $value);
+    }
+    return $value;
+}
+
+function bigram_is_rest() {
+    $is_rest = defined( 'REST_REQUEST' ) && REST_REQUEST;
+    return $is_rest;
+}
+
+
+
+
+
+
+
