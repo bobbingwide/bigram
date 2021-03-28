@@ -1,7 +1,7 @@
 {
-	"name": "sb-field-block",
+	"name": "bigram",
 	"version": "0.0.0",
-	"description": "Displays a post meta data field",
+	"description": "SB Bigrams - Seen Before",
 	"author": "bobbingwide",
 	"license": "GPL 3.0",
 	"main": "build/index.js",

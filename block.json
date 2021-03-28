@@ -1,17 +1,17 @@
 {
 	"apiVersion": 2,
-	"name": "oiksb/sb-field-block",
-	"title": "Field block",
+	"name": "bigram/seen-before",
+	"title": "Seen before",
 	"category": "text",
 	"icon": "info-outline",
-	"description": "Displays a post meta data field",
+	"description": "Displays how many times this content has been viewed",
 	"supports": {
 		"html": false,
 	  	"className": false
 	},
-	"textdomain": "sb-field-block",
+	"textdomain": "bigram",
 	"editorScript": "file:./build/index.js",
 	"editorStyle": "file:./build/index.css",
 	"style": "file:./build/style-index.css",
-  	"render_callback": "sb_field_block_dynamic_block"
+  	"render_callback": "bigram_block_dynamic_block"
 }
