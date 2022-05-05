@@ -1,0 +1,25 @@
+{
+	"apiVersion": 2,
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+	"name": "bigram/seen-before",
+	"title": "Seen before",
+	"category": "text",
+	"icon": "info-outline",
+	"description": "Displays how many times this content has been viewed",
+	"supports": {
+		"html": false,
+	  	"className": false
+	},
+  "attributes": {
+	"seenBefore": {
+	  "type": "string",
+	  "source": "meta",
+	  "meta": "_seen_before"
+	}
+  },
+	"textdomain": "bigram",
+	"editorScript": "file:../../build/seen-before.js",
+	"editorStyle": "file:../../build/seen-before.css",
+	"style": "file:../../build/style-seen-before.css",
+  	"render_callback": "bigram_block_dynamic_block"
+}

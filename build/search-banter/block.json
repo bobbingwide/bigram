@@ -1,0 +1,31 @@
+{
+  "apiVersion": 2,
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "name": "bigram/search-banter",
+  "title": "Search banter",
+  "category": "text",
+  "icon": "search",
+  "description": "Displays Search banter for Seriously Bonkers",
+  "supports": {
+	"html": false,
+	"className": false,
+ 	"color": {
+	  "gradients": false,
+	  "text": true,
+	  "background": true,
+	  "link": false
+	},
+	"typography": {
+	  "fontSize": false,
+	  "lineHeight": false
+	}
+  },
+  "attributes": {
+
+  },
+  "textdomain": "bigram",
+  "editorScript": "file:../search-banter.js",
+  "editorStyle": "file:../search-banter.css",
+  "style": "file:../style-search-banter.css",
+  "render_callback": "bigram_block_dynamic_block_search_banter"
+}
