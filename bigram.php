@@ -488,14 +488,18 @@ function bigram_check_tag_object( $tag ) {
  * @return string updated post content
  */
 function bigram_the_content( $content ) {
+	//bw_trace2();
 	static $sample_bigrams = null;
 	if ( !$sample_bigrams ) {
 		oik_require( "classes/class-sample-bigrams.php", "bigram" );
 		$sample_bigrams = new sample_bigrams();
+
 	}
 	if ( $sample_bigrams ) {
 		$content = $sample_bigrams->the_content( $content );
 	}
+	//bw_trace2( $content, "after BTC", false);
+
 	return $content;
 }
 
