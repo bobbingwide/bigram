@@ -566,7 +566,13 @@ function bigram_request( $request ) {
  */
 function bigram_block_block_init() {
     $args = [ 'render_callback' => 'bigram_block_dynamic_block'];
-    register_block_type_from_metadata( __DIR__, $args );
+    $registered = register_block_type_from_metadata( __DIR__ . '/build/seen-before', $args );
+
+    bw_trace2( $registered, "registered?", false );
+
+	$args = [ 'render_callback' => 'bigram_block_dynamic_block_search_banter'];
+	$registered = register_block_type_from_metadata( __DIR__ . '/build/search-banter', $args );
+	//$registered = register_block_type_from_metadata( __DIR__ .'/src/oik-address', $args );
 }
 
 
