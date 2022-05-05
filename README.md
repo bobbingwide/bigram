@@ -3,8 +3,8 @@
 * Donate link: https://www.oik-plugins.com/oik/oik-donate/
 * Tags: specific, behaviour
 * Requires at least: 4.5.2
-* Tested up to: 4.9.7
-* Stable tag: 0.2.1
+* Tested up to: 5.9.3
+* Stable tag: 0.3.0
 * License: GPLv2 or later
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,10 +17,14 @@ Its purpose is to make it easy to gather all instances of the bigrams
 which are pairs of words where the first word starts with an 'S'
 and the second word starts with a 'B'.
 
-It's only needed on the website www.bigram.co.uk
+It's only needed on the website seriouslybonkers.com ( www.bigram.co.uk )
 
 But the code itself could be quite educational since it tries to do things in WordPress
 that you might not normally attempt.
+
+This plugin delivers blocks:
+
+- bigram/seen-before
 
 
 
@@ -55,19 +59,23 @@ The above two taxonomies as well as the default Category are attached to both bi
 We don't really use posts.
 
 # What themes are supported? 
-The website was built to work with a theme called genesis-SB - Specially Built.
+I'm developing an FSE theme called SB ( Second Byte ) to replace the genesis-SB theme ( Specially Built )
+that was used in 2018.
 
 It was originally put together with TwentyFourteen.
 
 It then suffered briefly with an Artisteer theme ( sb0515 ); used for styling basics.
 
-And some bits were cribbed from Pictorico... but they don't work well on tablets or smart phones.
+And some bits were cribbed from Pictorico... but they didn't work well on tablets or smart phones.
 
 
 ## Screenshots 
 1. None yet
 
 ## Upgrade Notice 
+# 0.3.0 
+Added Seen before block for use with the SB theme.
+
 # 0.2.1 
 Upgrade for improved saving of drafts.
 
@@ -95,6 +103,14 @@ The original site was developed with Drupal.
 
 
 ## Changelog 
+# 0.3.0 
+* Added: Seen before block ( bigram/seen-before ) #23
+* Fixed: prevent badly formed more links in the FSE post-content block #21
+* Changed: Change _seen_before field to #theme true so that it can be used in a [bw_fields] shortcode #22
+* Tested: With WordPress 5.9.3
+* Tested: WIth Gutenberg 13.1.0
+* Tested: With PHP 8.0
+
 # 0.2.1 
 * Changed: Attempt to avoid problems during heartbeat saving of drafts
 
@@ -136,6 +152,3 @@ The original site was developed with Drupal.
 
 # 0.1 
 * Added: New plugin for the WordPress version of bigram.co.uk
-
-
-
