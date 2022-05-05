@@ -621,6 +621,20 @@ function bigram_is_rest() {
     return $is_rest;
 }
 
+function bigram_block_dynamic_block_search_banter( $attributes ) {
+	if ( !is_search() ) {
+		return null;
+	}
+	if (function_exists('\oik\oik_blocks\oik_blocks_check_server_func')) {
+
+		$html = \oik\oik_blocks\oik_blocks_check_server_func('includes/search-banter.php', 'bigram', 'bigram_search_banter');
+		if ( ! $html ) {
+			$html = bigram_search_banter($attributes);
+		}
+	}
+	return $html;
+}
+
 
 
 
