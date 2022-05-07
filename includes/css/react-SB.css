@@ -1,0 +1,74 @@
+/* (C) Copyright Bobbing Wide 2016-2022
+ * Styles for react-SB 
+ *
+ */
+body {
+  font: 16px/1 sans-serif;
+}
+
+#root {
+	width: 100%; 
+	margin: 0 auto;
+
+}
+
+div.app {
+	background-color: #ffffff;
+}
+
+div.side { 	
+	float: left;
+	width: 50%;
+	text-align: center;
+	border: 1px solid grey;
+	box-sizing: border-box;
+}
+
+div.side ul { 
+	display: block;
+}
+
+div.side li,
+div.items li {
+	display: inline-block;
+	margin: 0 0 0 2px;
+	padding: 2px;
+}
+
+div.items li:nth-of-type(even) {
+	background-color: #eeeeee;
+}
+
+div.side li:hover,
+div.items li:hover {
+	color: #ffffff;
+	background-color: #222222;
+}
+
+div.details { 
+	clear: both;
+	max-width: 800px;
+	margin: 10px auto; 
+	background-color: #ffffff;
+}
+
+div.content {
+
+	float: none;
+}
+
+div.featured {
+}
+
+div.featured img {
+	max-width: 100%;
+}
+
+div.featured p {
+	text-align: center;
+}
+
+div.items { 
+	clear: both;
+}
+

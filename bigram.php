@@ -568,11 +568,16 @@ function bigram_block_block_init() {
     $args = [ 'render_callback' => 'bigram_block_dynamic_block'];
     $registered = register_block_type_from_metadata( __DIR__ . '/build/seen-before', $args );
 
-    bw_trace2( $registered, "registered?", false );
+
 
 	$args = [ 'render_callback' => 'bigram_block_dynamic_block_search_banter'];
 	$registered = register_block_type_from_metadata( __DIR__ . '/build/search-banter', $args );
+
+	$args = [ 'render_callback' => 'bigram_block_dynamic_block_react_sb'];
+
+	$registered = register_block_type_from_metadata( __DIR__ . '/build/reactsb', $args );
 	//$registered = register_block_type_from_metadata( __DIR__ .'/src/oik-address', $args );
+	bw_trace2( $registered, "registered?", false );
 }
 
 
@@ -630,6 +635,18 @@ function bigram_block_dynamic_block_search_banter( $attributes ) {
 		$html = \oik\oik_blocks\oik_blocks_check_server_func('includes/search-banter.php', 'bigram', 'bigram_search_banter');
 		if ( ! $html ) {
 			$html = bigram_search_banter($attributes);
+		}
+	}
+	return $html;
+}
+
+function bigram_block_dynamic_block_react_sb( $attributes ) {
+
+	if (function_exists('\oik\oik_blocks\oik_blocks_check_server_func')) {
+
+		$html = \oik\oik_blocks\oik_blocks_check_server_func('includes/react-SB.php', 'bigram', 'bigram_react_sb');
+		if ( ! $html ) {
+			$html = bigram_react_sb($attributes);
 		}
 	}
 	return $html;
