@@ -3,6 +3,7 @@ module.exports = {
 	...defaultConfig,
 	entry: {
 		'seen-before': './src/seen-before',
-		'search-banter': './src/search-banter'
+		'search-banter': './src/search-banter',
+		'reactsb': './src/reactsb'
 	},
 };
