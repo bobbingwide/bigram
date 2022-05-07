@@ -1,0 +1,28 @@
+{
+  "apiVersion": 2,
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "name": "bigram/reactsb",
+  "title": "React SB",
+  "category": "text",
+  "icon": "star",
+  "description": "Implements react-SB.js front end",
+  "supports": {
+	"html": false,
+	"className": true,
+	"color": {
+	  "gradients": false,
+	  "text": true,
+	  "background": true,
+	  "link": false
+	},
+	"typography": {
+	  "fontSize": false,
+	  "lineHeight": false
+	}
+  },
+  "textdomain": "bigram",
+  "editorScript": "file:../reactsb.js",
+  "editorStyle": "file:../reactsb.css",
+  "style": "file:../reactsb.css",
+  "render_callback": "bigram_block_dynamic_block_react_SB"
+}
