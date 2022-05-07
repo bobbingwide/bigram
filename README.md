@@ -22,10 +22,11 @@ It's only needed on the website seriouslybonkers.com ( www.bigram.co.uk )
 But the code itself could be quite educational since it tries to do things in WordPress
 that you might not normally attempt.
 
-This plugin delivers blocks:
+This plugin delivers blocks for use in the SB ( Second Byte ) theme:
 
 - bigram/seen-before
-
+- bigram/search-banter
+- bigram/reactsb
 
 
 ## Installation 
@@ -54,7 +55,7 @@ The custom taxonomies are:
 - s-word for the word beginning with S
 - b-word for the word beginning with B
 
-The above two taxonomies as well as the default Category are attached to both bigrams and attachments.
+The above two taxonomies, as well as the default Category, are attached to both bigrams and attachments.
 
 We don't really use posts.
 
@@ -62,7 +63,7 @@ We don't really use posts.
 I'm developing an FSE theme called SB ( Second Byte ) to replace the genesis-SB theme ( Specially Built )
 that was used in 2018.
 
-It was originally put together with TwentyFourteen.
+The site was originally put together with TwentyFourteen.
 
 It then suffered briefly with an Artisteer theme ( sb0515 ); used for styling basics.
 
@@ -73,6 +74,9 @@ And some bits were cribbed from Pictorico... but they didn't work well on tablet
 1. None yet
 
 ## Upgrade Notice 
+# 0.4.0 
+Update for the server rendered bigram/reactsb block.
+
 # 0.3.0 
 Added Seen before block for use with the SB theme.
 
@@ -103,6 +107,11 @@ The original site was developed with Drupal.
 
 
 ## Changelog 
+# 0.4.0 
+* Added: Add bigram/reactsb block for the page-sb.html template #25
+* Changed: Deliver seen-before and search-banter blocks individually #24
+* Added: Add bigram/search-banter block for the search page #24
+
 # 0.3.0 
 * Added: Seen before block ( bigram/seen-before ) #23
 * Fixed: prevent badly formed more links in the FSE post-content block #21
