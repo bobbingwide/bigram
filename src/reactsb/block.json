@@ -8,7 +8,7 @@
   "description": "Implements react-SB.js front end",
   "supports": {
 	"html": false,
-	"className": false,
+	"className": true,
 	"color": {
 	  "gradients": false,
 	  "text": true,
@@ -23,7 +23,6 @@
   "textdomain": "bigram",
   "editorScript": "file:../reactsb.js",
   "editorStyle": "file:../reactsb.css",
-  "style": "file:../react-SB.css",
-  "viewScript": "file:../react-SB.js",
+  "style": "file:../reactsb.css",
   "render_callback": "bigram_block_dynamic_block_react_SB"
 }
