@@ -157,7 +157,7 @@ function bigram_wp_insert_post_sample_bigrams( $post_ID, $post, $update ) {
  * @return WP_Query - the updated query object
  */
 function bigram_pre_get_posts( $query ) {
-	bw_trace2();
+	//bw_trace2();
 	if ( is_category() && false == $query->get('suppress_filters') ) {
 		$post_types = array( "post", "bigram" );
 		/*
@@ -477,7 +477,7 @@ function bigram_check_post_type_object( $post_type ) {
 
 function bigram_check_tag_object( $tag ) {
 	$tag_object = get_taxonomy( $tag );
-	bw_trace2( $tag_object, "tag_object", true );
+	bw_trace2( $tag_object, "tag_object", true, BW_TRACE_VERBOSE );
 }
 
 /**
