@@ -1,10 +1,11 @@
 # bigram 
+![banner](assets/bigram-banner-772x250.jpg)
 * Contributors: bobbingwide
 * Donate link: https://www.oik-plugins.com/oik/oik-donate/
 * Tags: specific, behaviour
 * Requires at least: 4.5.2
 * Tested up to: 5.9.3
-* Stable tag: 0.3.0
+* Stable tag: 0.4.1
 * License: GPLv2 or later
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -74,6 +75,9 @@ And some bits were cribbed from Pictorico... but they didn't work well on tablet
 1. None yet
 
 ## Upgrade Notice 
+# 0.4.1 
+Update for improved search banter for non-SB search.
+
 # 0.4.0 
 Update for the server rendered bigram/reactsb block.
 
@@ -107,6 +111,13 @@ The original site was developed with Drupal.
 
 
 ## Changelog 
+# 0.4.1 
+* Changed: Improve search banter results for non-SB search #24
+* Changed: Reduce amount of stuff being traced
+* Tested: With WordPress 5.9.3 and WordPress Multisite
+* Tested: With PHP 8.0
+* Tested: With Gutenberg 13.1.0
+
 # 0.4.0 
 * Added: Add bigram/reactsb block for the page-sb.html template #25
 * Changed: Deliver seen-before and search-banter blocks individually #24
