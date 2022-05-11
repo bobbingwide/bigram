@@ -40,7 +40,7 @@ function bigram_search_title() {
  *
  */
 function bigram_search_banter_details() {
-
+	global $wp_query;
 	echo '<div class="search-banter">';
 
 	$terms = bigram_search_banter_get_terms();
@@ -48,7 +48,7 @@ function bigram_search_banter_details() {
 	$bwords = get_words_starting( $terms, "b", "b-word" );
 	$is_sb_query = is_sb_query( $terms, $swords, $bwords );
 	if ( $is_sb_query ) {
-		global $wp_query;
+
 		if ( $wp_query->post_count > 0 ) {
 			// something found
 			bigram_check_first_post( $swords, $bwords );
@@ -59,9 +59,15 @@ function bigram_search_banter_details() {
 		}
 
 	} else {
-		// We don't really care if it's not an SB query
-		// Produce the same message as for a 404 page.
-		bigram_sorry_but(' Sorry but, no posts surfaced before I gave up looking. Sobeit.');
+		// It's not an SB query
+
+		if ( $wp_query->post_count > 0 ) {
+			// Check what we found...
+			bigram_check_first_post( $swords, $bwords );
+		} else {
+			// Produce the same message as for a 404 page.
+			bigram_sorry_but(' Sorry but, no posts surfaced before I gave up looking. Sobeit.');
+		}
 	}
 	echo '</div>';
 
