@@ -431,9 +431,6 @@ function bigram_register_bigram() {
 	$post_type_args['rest_controller_class'] = 'WP_REST_Posts_Controller';
   //$post_type_args['menu_icon'] = 'dashicons-admin-';
   bw_register_post_type( $post_type, $post_type_args );
-
-
-
 }
 
 function bigram_register_seen_before() {
@@ -457,7 +454,7 @@ function bigram_auth_callback() {
  */
 function bigram_register_post_meta( $field, $post_type, $description ) {
     global $wp_meta_keys;
-    bw_trace2( $wp_meta_keys, 'wp_meta_keys before' );
+    bw_trace2( $wp_meta_keys, 'wp_meta_keys before', true, BW_TRACE_DEBUG );
     $registered =  register_post_meta( $post_type, $field,
         array('show_in_rest' => true,
             'single' => true,
@@ -466,9 +463,8 @@ function bigram_register_post_meta( $field, $post_type, $description ) {
             'description' => $description
         )
     );
-    bw_trace2( $registered, 'registered?', false);
-    bw_trace2( $wp_meta_keys, 'wp_meta_keys after', false );
-
+    bw_trace2( $registered, 'registered?', false, BW_TRACE_VERBOSE );
+    bw_trace2( $wp_meta_keys, 'wp_meta_keys after', false, BW_TRACE_VERBOSE );
 }
 
 function bigram_check_post_type_object( $post_type ) {
@@ -505,37 +501,55 @@ function bigram_the_content( $content ) {
 }
 
 /**
- * Filters the request to reduce 404s
-
+ * Filters the request to attempt to reduce 404s
  *
-
-    [page] =>
-    [bigram] => self-bio
-    [post_type] => bigram
-    [name] => self-bio
-		[pagename] =
-
-		/bigram/submit%20bigram
-
-)
+ * When the URL entered doesn't contain the bigram post type
+ * and contains spaces rather than hyphens then we attempt
+ * to change the request to load a particular bigram.
+ *
+ * When the URL contains bigram then the request is like this:
+ * URL: bigram/shark%20bloke
+ *
+ * [page] => (string) ""
+ * [bigram] => (string) "shark%20bloke"
+ * [post_type] => (string) "bigram"
+ * [name] => (string) "shark%20bloke"
+ *
+ * Otherwise, it's like this:
+ * URL: shark%20bloke
+ *
+ * [page] => (string) ""
+ * [pagename] => (string) "shark%20bloke"
+ *
+ * or this:
+ * URL: six%20bells
+ *
+ * [page] => (string) ""
+ * [name] => (string) "six%20bells"
+ *
+ * In both of these cases we need to make it look like the bigram request.
  *
  * @param arary $request
  * @return array modified request
  */
 function bigram_request( $request ) {
-	bw_trace2();
+	//bw_trace2();
 	$post_type = bw_array_get( $request, "post_type", null );
-	$name = bw_array_get( $request, "name", null );
-	$name = str_replace( "%20", "-", $name );
 
 	if ( $post_type == 'bigram' ) {
+		$name = bw_array_get( $request, "bigram", null );
+		$name = str_replace( "%20", "-", $name );
 		$request[ 'bigram' ] = $name;
 		$request[ 'name' ] = $name;
-
 	}
 
 	if ( !$post_type ) {
-		if ( $name ) {
+		$name = bw_array_get( $request, "pagename", null );
+		if ( null === $name) {
+			$name = bw_array_get( $request, "name", null );
+		}
+		if ( $name && ( false !== strpos( $name, '%20'))) {
+			$name = str_replace( "%20", "-", $name );
 			$name = strtolower( $name );
 			$words = explode( "-", $name );
 			if ( 2 == count( $words ) ) {
@@ -543,18 +557,16 @@ function bigram_request( $request ) {
 				$sword = $words[0][0] == 's';
 				$bword = $words[1][0] == 'b';
 				if ( $sword && $bword ) {
-					$request['name'] = $name;
+					unset( $request['pagename']);
+					//$request['pagename'] = $name;
 					$request['post_type'] = 'bigram';
-					// $request['bigram'] = $name;
+					$request['bigram'] = $name;
+					$request['name'] = $name;
 				}
 			}
-
-
-			//gob();
 		}
 	}
-
-
+	bw_trace2( $request, 'request', false, BW_TRACE_VERBOSE );
 	return $request;
 }
 
@@ -569,8 +581,6 @@ function bigram_block_block_init() {
     $args = [ 'render_callback' => 'bigram_block_dynamic_block'];
     $registered = register_block_type_from_metadata( __DIR__ . '/build/seen-before', $args );
 
-
-
 	$args = [ 'render_callback' => 'bigram_block_dynamic_block_search_banter'];
 	$registered = register_block_type_from_metadata( __DIR__ . '/build/search-banter', $args );
 
@@ -578,7 +588,7 @@ function bigram_block_block_init() {
 
 	$registered = register_block_type_from_metadata( __DIR__ . '/build/reactsb', $args );
 	//$registered = register_block_type_from_metadata( __DIR__ .'/src/oik-address', $args );
-	bw_trace2( $registered, "registered?", false );
+	//bw_trace2( $registered, "registered?", false );
 }
 
 
