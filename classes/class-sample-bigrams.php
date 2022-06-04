@@ -496,16 +496,14 @@ class sample_bigrams {
    */
 	function sample_post( $post_ID, $post, $update ) {
 		bw_trace2();
-		if ( $update ) {
-			if ( false === strpos( $post->post_content, "<!--more-->Sampled from" ) ) {
-				$this->posts = array( $post );
-				$this->map_posts();
-				$this->process();
-			}
+		if ( false !== strpos( $post->post_content, '<!--more-->Seen before' ) ) {
+			return;
 		}
-
+		if ( false === strpos( $post->post_content, "<!--more-->Sampled from" ) ) {
+			return;
+		}
+		$this->posts = array( $post );
+		$this->map_posts();
+		$this->process();
 	}
-
-
-
 }
