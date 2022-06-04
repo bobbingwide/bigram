@@ -35,15 +35,16 @@ import './editor.scss';
 export default function Edit( { setAttributes, attributes } ) {
 	const blockProps = useBlockProps();
 	const postType = useSelect(
-		( select ) => select( 'core/editor' ).getCurrentPostType(),
+		(select) => select('core/editor').getCurrentPostType(),
 		[]
 	);
-	const [ meta, setMeta ] = useEntityProp(
+	const [meta, setMeta] = useEntityProp(
 		'postType',
 		postType,
 		'meta'
 	);
-	const metaFieldValue = meta['_seen_before'];
+	const metaFieldValue = ( postType === 'bigram') ? meta['_seen_before'] : 'n/a';
+
 	function updateMetaValue( newValue ) {
 		setMeta( { ...meta, '_seen_before': newValue } );
 	}
