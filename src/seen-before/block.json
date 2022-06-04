@@ -11,11 +11,6 @@
 	  	"className": false
 	},
   "attributes": {
-	"seenBefore": {
-	  "type": "string",
-	  "source": "meta",
-	  "meta": "_seen_before"
-	}
   },
 	"textdomain": "bigram",
 	"editorScript": "file:../../build/seen-before.js",
