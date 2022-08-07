@@ -4,8 +4,8 @@
 * Donate link: https://www.oik-plugins.com/oik/oik-donate/
 * Tags: specific, behaviour
 * Requires at least: 4.5.2
-* Tested up to: 5.9.3
-* Stable tag: 0.4.1
+* Tested up to: 6.0.1
+* Stable tag: 0.5.0
 * License: GPLv2 or later
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -75,6 +75,9 @@ And some bits were cribbed from Pictorico... but they didn't work well on tablet
 1. None yet
 
 ## Upgrade Notice 
+# 0.5.0 
+Update for easier update of featured image and content for existing bigrams.
+
 # 0.4.1 
 Update for improved search banter for non-SB search.
 
@@ -111,6 +114,19 @@ The original site was developed with Drupal.
 
 
 ## Changelog 
+# 0.5.0 
+* Changed: Build with latest scripts #23
+* Changed: Update wp-scripts #23
+* Added: Implement bw_new_pre_update_post filter function #28
+* Changed: Update build files #23
+* Changed: Don't sample posts which were created automatically; Seen before or Sampled from #4
+* Changed: Only set metaFieldValue for bigram post type #23
+* Changed: Remove seenBefore meta attribute - deprecated and not needed #23
+* Changed: Remove apiVersion and attributes from Seen before block registration #23
+* Changed: Improve logic in the 'request' filter hook #15
+* Tested: With WordPress 6.0.1 and WordPress Multisite
+* Tested: With PHP 8.0
+
 # 0.4.1 
 * Changed: Improve search banter results for non-SB search #24
 * Changed: Reduce amount of stuff being traced
