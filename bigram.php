@@ -49,6 +49,7 @@ function bigram_loaded() {
 	add_filter( "genesis_term_intro_text_output", "bigram_the_content", 20 );
 	add_filter( "request", "bigram_request" );
 	add_action( 'init', 'bigram_block_block_init' );
+	add_filter( 'bw_new_pre_update_post', "bigram_bw_new_pre_update_post", 10, 2 );
 }
 
 /**
@@ -663,9 +664,40 @@ function bigram_block_dynamic_block_react_sb( $attributes ) {
 	return $html;
 }
 
+/**
+ * Filters the post to apply newly validated fields on an update.
+ *
+ * For bigrams I want to be able to update existing entries which may have been
+ * created without a featured image and only contains content such as:
+ * - Seen before as S-word and B-word
+ * - Sampled from S-word B-word
+ * - <br/>From the original SB.txt
+ *
+ *
+ *
+ * @param $post
+ * @param $validated
+ * @return mixed
+ */
+function bigram_bw_new_pre_update_post ( $post, $validated ) {
+	bw_trace2();
+	// Adjust the original content to append to the new content.
+	// The content will still be a Classic block, but it will convert better.
+	$append = $post['post_content'];
+	$append = str_replace( '<br />From the original SB.txt', '<p>From the original SB.txt</p>', $append );
 
+	// "<!--more-->Sampled from {$post->post_title}.";
+	if ( 0 === strpos( $append, '<!--more-->Sampled')) {
+		$append = str_replace( '>S', '><p>Originally S', $append);
+		$append = str_replace( '.', '.</p>', $append);
+	}
 
+	// <!--more-->Seen before as S-word and B-word.
+	if ( 0 === strpos( $append, '<!--more-->Seen before')) {
+		$append = str_replace( '>S', '><p>Originally S', $append);
+		$append = str_replace( '.', '.</p>', $append);
+	}
 
-
-
-
+	$post['post_content'] = $validated['post_content'] . $append;
+	return $post;
+}
