@@ -7,22 +7,20 @@
   "icon": "search",
   "description": "Displays Search banter for Seriously Bonkers",
   "supports": {
-	"html": false,
-	"className": false,
- 	"color": {
-	  "gradients": false,
-	  "text": true,
-	  "background": true,
-	  "link": false
-	},
-	"typography": {
-	  "fontSize": false,
-	  "lineHeight": false
-	}
+    "html": false,
+    "className": false,
+    "color": {
+      "gradients": false,
+      "text": true,
+      "background": true,
+      "link": false
+    },
+    "typography": {
+      "fontSize": false,
+      "lineHeight": false
+    }
   },
-  "attributes": {
-
-  },
+  "attributes": {},
   "textdomain": "bigram",
   "editorScript": "file:../search-banter.js",
   "editorStyle": "file:../search-banter.css",

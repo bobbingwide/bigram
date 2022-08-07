@@ -7,18 +7,18 @@
   "icon": "star",
   "description": "Implements react-SB.js front end",
   "supports": {
-	"html": false,
-	"className": true,
-	"color": {
-	  "gradients": false,
-	  "text": true,
-	  "background": true,
-	  "link": false
-	},
-	"typography": {
-	  "fontSize": false,
-	  "lineHeight": false
-	}
+    "html": false,
+    "className": true,
+    "color": {
+      "gradients": false,
+      "text": true,
+      "background": true,
+      "link": false
+    },
+    "typography": {
+      "fontSize": false,
+      "lineHeight": false
+    }
   },
   "textdomain": "bigram",
   "editorScript": "file:../reactsb.js",
