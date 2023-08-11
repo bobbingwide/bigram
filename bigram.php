@@ -147,19 +147,25 @@ function bigram_wp_insert_post_sample_bigrams( $post_ID, $post, $update ) {
  * i.e. The home page, as opposed to the front page.
  *
  * Notes:
+ *
+ * Original notes pre WordPress 6.3
  * - You can't check for main query in "pre_get_posts"
  * - You can't use WP_Query::is_main_query() either
  * - You can't check is_home() in pre_get_posts for other reasons
  * - Assumes that the "post" post type, for blog posts, will always be included.
  * - Once we've run the main query we don't need this filter any more.
-
+ *
+ * Notes for WordPress 6.3 & WooCommerce 8.0.1
+ * - we now use $query->is_category() to avoid getting a "Doing it wrong message" from is_category()
+ * - this allows for plugins which run queries before the main query...
+ * - which is what we're trying to intercept.
  *
  * @param WP_Query $query - the query object for the current query
  * @return WP_Query - the updated query object
  */
 function bigram_pre_get_posts( $query ) {
-	//bw_trace2();
-	if ( is_category() && false == $query->get('suppress_filters') ) {
+	if ( $query->is_category() && false == $query->get('suppress_filters') ) {
+
 		$post_types = array( "post", "bigram" );
 		/*
 		global $wp_post_types;
