@@ -18,7 +18,7 @@ Its purpose is to make it easy to gather all instances of the bigrams
 which are pairs of words where the first word starts with an 'S'
 and the second word starts with a 'B'.
 
-It's only needed on the website seriouslybonkers.com ( www.bigram.co.uk )
+It's only needed on the website seriouslybonkers.com
 
 But the code itself could be quite educational since it tries to do things in WordPress
 that you might not normally attempt.
