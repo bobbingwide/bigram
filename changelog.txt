@@ -1,4 +1,7 @@
 == Upgrade Notice ==
+= 0.5.1 = 
+Tested with WordPress 6.3.1 and PHP 8.2
+
 = 0.5.0 = 
 Update for easier update of featured image and content for existing bigrams.
 
@@ -36,8 +39,12 @@ Now on GitHub.
 New plugin for the WordPress version of bigram.co.uk.
 The original site was developed with Drupal.
 
-
 == Changelog ==
+= 0.5.1 = 
+* Fixed: Avoid Doing it wrong message from bigram_pre_get_posts() #35
+* Tested: With WordPress 6.3.1
+* Tested: With PHP 8.2
+
 = 0.5.0 =
 * Changed: Build with latest scripts #23
 * Changed: Update wp-scripts #23

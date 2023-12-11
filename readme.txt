@@ -3,8 +3,8 @@ Contributors: bobbingwide
 Donate link: https://www.oik-plugins.com/oik/oik-donate/
 Tags: specific, behaviour
 Requires at least: 4.5.2
-Tested up to: 6.3.1
-Stable tag: 0.5.1
+Tested up to: 6.4.2
+Stable tag: 0.6.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -74,12 +74,13 @@ And some bits were cribbed from Pictorico... but they didn't work well on tablet
 1. None yet
 
 == Upgrade Notice ==
-= 0.5.1 = 
-Tested with WordPress 6.3.1 and PHP 8.2
+= 0.6.0 = 
+Update for support for PHP 8.1, PHP 8.2 and PHP 8.3
 
 == Changelog ==
-= 0.5.1 =
-* Fixed: Avoid Doing it wrong message from bigram_pre_get_posts() #35
-* Tested: With WordPress 6.3.1
-* Tested: With PHP 8.2
-
+= 0.6.0 =
+* Changed: Add PHPUnit tests for PHP 8.1 and PHP 8.2 #39
+* Changed: Update wp-scripts #40
+* Tested: With WordPress 6.4.2
+* Tested: With PHP 8.1, PHP 8.2 and PHP 8.3
+* Tested: With PHPUnit 9.6
