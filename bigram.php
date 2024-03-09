@@ -50,6 +50,7 @@ function bigram_loaded() {
 	add_filter( "request", "bigram_request" );
 	add_action( 'init', 'bigram_block_block_init' );
 	add_filter( 'bw_new_pre_update_post', "bigram_bw_new_pre_update_post", 10, 2 );
+	remove_action( 'embed_head', 'wp_print_styles', 20 );
 }
 
 /**
@@ -400,6 +401,7 @@ function bigram_oik_fields_loaded() {
 	bigram_register_seen_before();
 
 	bigram_check_post_type_object( "bigram" );
+	register_taxonomy_for_object_type( 'synthesised-by', 'attachment');
 
 }
 
@@ -419,6 +421,17 @@ function bigram_register_taxonomies() {
 
 		bigram_check_tag_object( $tag );
 	}
+	// These are categories
+	$tags = array( 'supplied-by', 'synthesised-by' );
+	foreach ( $tags as $tag ) {
+		$args = array( "show_in_rest" => true
+		, "rest_base"  => $tag
+		, "rest_controller_class" => 'WP_REST_Terms_Controller'
+		, "label" => $tag
+		);
+		bw_register_custom_category( $tag, null, $args );
+		bigram_check_tag_object( $tag );
+	}
 }
 
 /**
@@ -431,7 +444,7 @@ function bigram_register_bigram() {
   $post_type_args['label'] = 'bigrams';
   $post_type_args['description'] = 'Bi-gram - a pair of consecutive written units such as letters, syllables, or words.';
   $post_type_args['supports'] = array( 'title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'author', 'publicize', 'home', 'custom-fields' );
-  $post_type_args['taxonomies'] = array( "category", "s-word", "b-word", "s-letter", "b-letter" );
+  $post_type_args['taxonomies'] = array( "category", "s-word", "b-word", "s-letter", "b-letter",'supplied-by', 'synthesised-by' );
   $post_type_args['has_archive'] = true;
 	$post_type_args['show_in_rest'] = true;
 	$post_type_args['rest_base'] = 'bigram';
@@ -544,7 +557,7 @@ function bigram_request( $request ) {
 	$post_type = bw_array_get( $request, "post_type", null );
 
 	if ( $post_type == 'bigram' ) {
-		$name = bw_array_get( $request, "bigram", null );
+		$name = bw_array_get( $request, "bigram", '' );
 		$name = str_replace( "%20", "-", $name );
 		$request[ 'bigram' ] = $name;
 		$request[ 'name' ] = $name;
