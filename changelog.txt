@@ -1,4 +1,7 @@
 == Upgrade Notice ==
+= 0.6.0 = 
+Update for support for PHP 8.1, PHP 8.2 and PHP 8.3
+
 = 0.5.1 = 
 Tested with WordPress 6.3.1 and PHP 8.2
 
@@ -40,6 +43,13 @@ New plugin for the WordPress version of bigram.co.uk.
 The original site was developed with Drupal.
 
 == Changelog ==
+= 0.6.0 =
+* Changed: Add PHPUnit tests for PHP 8.1 and PHP 8.2 #39
+* Changed: Update wp-scripts #40
+* Tested: With WordPress 6.4.2
+* Tested: With PHP 8.1, PHP 8.2 and PHP 8.3
+* Tested: With PHPUnit 9.6
+
 = 0.5.1 = 
 * Fixed: Avoid Doing it wrong message from bigram_pre_get_posts() #35
 * Tested: With WordPress 6.3.1
