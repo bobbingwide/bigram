@@ -720,3 +720,11 @@ function bigram_bw_new_pre_update_post ( $post, $validated ) {
 	$post['post_content'] = $validated['post_content'] . $append;
 	return $post;
 }
+
+function bw_form_field_supplied_by( $name, $type, $title, $value, $args) {
+	bw_form_field_category( $name, $type, $title, $value, $args );
+}
+
+function bw_form_field_synthesised_by( $name, $type, $title, $value, $args) {
+	bw_form_field_category( $name, $type, $title, $value, $args );
+}
