@@ -45,12 +45,20 @@ function bigram_loaded() {
 	add_filter( "bw_field_validation_post_content", "bigram_validate_post_content", 10, 3 );
 	add_filter( "oik_add_new_validate", "bigram_add_new_validate", 10, 4 );
 	add_action( "oik_fields_loaded", "bigram_oik_fields_loaded" );
-	add_filter( "the_content", "bigram_the_content", 20 );
+	//add_filter( "the_content", "bigram_the_content", 20 );
 	add_filter( "genesis_term_intro_text_output", "bigram_the_content", 20 );
 	add_filter( "request", "bigram_request" );
 	add_action( 'init', 'bigram_block_block_init' );
 	add_filter( 'bw_new_pre_update_post', "bigram_bw_new_pre_update_post", 10, 2 );
 	remove_action( 'embed_head', 'wp_print_styles', 20 );
+	add_filter( 'render_block_core/list-item', 'bigram_render_block_core_paragraph', 10, 3, );
+	add_filter( 'render_block_core/paragraph', 'bigram_render_block_core_paragraph', 10, 3, );
+	// This is for core/freeform
+	add_filter( 'render_block_', 'bigram_render_block_core_paragraph', 10, 3, );
+	add_filter( 'render_block_core/heading', 'bigram_render_block_core_paragraph', 10, 3, );
+	add_filter( 'render_block_core/code', 'bigram_render_block_core_paragraph', 10, 3, );
+	add_filter( 'run_wptexturize', '__return_false');
+
 }
 
 /**
@@ -139,6 +147,7 @@ function bigram_wp_insert_post_sample_bigrams( $post_ID, $post, $update ) {
 		$sample_bigrams = new sample_bigrams();
 		$sample_bigrams->sample_post( $post_ID, $post, $update );
 	}
+
 }
 
 /**
@@ -728,3 +737,30 @@ function bw_form_field_supplied_by( $name, $type, $title, $value, $args) {
 function bw_form_field_synthesised_by( $name, $type, $title, $value, $args) {
 	bw_form_field_category( $name, $type, $title, $value, $args );
 }
+
+/**
+ * Filters the rendered paragraph block.
+ *
+ * @param $content
+ * @param $parsed_block
+ * @param $block
+ * @return mixed|string
+ */
+function bigram_render_block_core_paragraph( $content, $parsed_block, $block ) {
+	//echo $content;
+	bw_trace2( $content, "content", false);
+	$sample_bigrams = bigram_load_sample_bigrams();
+	$content = $sample_bigrams->convert_bigrams_to_links( $content, $parsed_block, $block );
+	//$content = do_shortcode( $content );
+	return $content;
+}
+
+function bigram_load_sample_bigrams() {
+	static $sample_bigrams = null;
+	if ( !$sample_bigrams ) {
+		oik_require( "classes/class-sample-bigrams.php", "bigram" );
+		$sample_bigrams = new sample_bigrams();
+	}
+	return $sample_bigrams;
+}
+

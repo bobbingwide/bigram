@@ -189,7 +189,8 @@ class sample_bigrams {
 		bw_trace2();
 		$this->echo( "Processing {$post->ID} {$post->post_title}" );
 		$content = $post->post_content;
-		$content = $this->process_contents_using_HTML_Tag_Processor( $content );
+		$contents = $this->process_contents_using_HTML_Tag_Processor( $content );
+		$this->process_contents( $contents );
 		$this->update( $post, $content );
 	}
 
@@ -208,6 +209,16 @@ class sample_bigrams {
 		$waitforgt = false;
 		foreach ( $contents as $index => $word ) {
 			$char = strtolower( substr( $word, 0, 1 ) );
+			// Ignore wrapping quotes.
+			switch ( $char ) {
+				case "'":
+				case '"':
+				  $char = strtolower( substr( $word, 1, 1 ) );
+				  break;
+				default:
+					// Stick with what we've got.
+			}
+
 			switch ( $char ) {
 				case '<':
 					$waitforgt = true;
@@ -245,11 +256,12 @@ class sample_bigrams {
 		}
 
 		$content = implode( " ", $contents );
-		$content = str_replace( "</a> ", "</a>", $content );
-		$content = str_replace( " ,", ",", $content );
-		$content = str_replace( " .", ".", $content );
-		//echo esc_html( $content);
-		//gob();
+		$content = str_replace( " </a>", "</a>", $content );
+		// These are no longer necessary.
+		//$content = str_replace( " ,", ",", $content );
+		//$content = str_replace( " .", ".", $content );
+		//$content = str_replace( '  ', ' ', $content );
+		
 		return $content;
 	}
 
@@ -263,7 +275,7 @@ class sample_bigrams {
 			switch ( $token_type ) {
 				case '#text':
 					$text = $p->get_modifiable_text();
-					$text = trim( $text );
+					//$text = trim( $text );
 					//bw_trace2( $text, "text", false );
 					//$this->echo( $text );
 					break;
@@ -281,12 +293,13 @@ class sample_bigrams {
 				$contents.=' ';
 			}
 		}
+		$contents = trim( $contents );
 		bw_trace2( $contents, "contents", false );
 		$this->echo( $contents );
-		$this->process_contents( $contents );
+		//$this->process_contents( $contents );
 
 		//bw_trace2( $p, "p" );
-		return $content;
+		return $contents;
 	}
 
 	/**
@@ -304,6 +317,22 @@ class sample_bigrams {
 		return $content;
 	}
 
+	function convert_bigrams_to_links( $content, $parsed_block, $block ) {
+		$contents = $this->process_contents_using_HTML_Tag_Processor( $content );
+		$linked_contents = $this->process_contents( $contents );
+		////echo $contents;
+		//echo $linked_contents;
+		//echo esc_html( $content );
+		oik_require_lib( 'hexdump');
+		bw_trace2( oik_hexdump( $content ), "contentNL", false);
+		//$content = str_replace( "\r\n", ' ', $content );
+		//$content = str_replace( "\r", ' ', $content );
+		bw_trace2( oik_hexdump( $content ), "contentNL", false);
+		$linked_content = str_replace( $contents, $linked_contents, $content);
+		//echo esc_html( $linked_content );
+		return $linked_content;
+	}
+
 	function report() {
 
 	}
@@ -311,7 +340,10 @@ class sample_bigrams {
 	/**
 	 * Creates a link to the SB bigram
 	 *
-	 * Strips the bword from the second word and replaces the sword with the link
+	 * Strips the bword from the second word and replaces the
+	 * sword with the first half of the link
+	 * and the bword with the second half.
+	 *
 	 * <a href="https://qw/bigram/bigram/sword-bword>sword bword</a>
 	 *
 	 */
@@ -350,7 +382,8 @@ class sample_bigrams {
 	/**
 	 * Creates the sword link
 	 *
-	 * Replaces the existing sword with a link
+	 * Replaces the existing sword with a link.
+	 * If the sword is quoted we move the
 	 *
 	 * @param array $contents the contents array
 	 * @param integer $sword_index
@@ -359,6 +392,13 @@ class sample_bigrams {
 	 */
 	function create_sword_link( &$contents, $sword_index, $sword, $bword ) {
 		$link_text = $contents[ $sword_index ];
+		$spos = stripos( $link_text, 's');
+		$prefix = '';
+		if ( $spos ) {
+			$prefix = substr( $link_text, 0, $spos );
+			$link_text = substr( $link_text, $spos);
+		}
+
 		$link_text .= " ";
 		$link_text .= substr( $contents[ $sword_index+1 ], 0, strlen( $bword ) );
 
@@ -366,9 +406,12 @@ class sample_bigrams {
 		//$url = "https://bigram.co.uk/bigram/$sword-$bword" ;
 		$link = retlink( null, $url, $link_text );
 
+		// Strip the </a> from the $link
+		$link = str_replace( '</a>', '', $link);
+
 		//$link = '<em>' . $link_text . '</em>';
 		//echo $link . PHP_EOL;
-		$contents[ $sword_index ] = $link;
+		$contents[ $sword_index ] = $prefix . $link;
 	}
 
 	/**
@@ -386,7 +429,7 @@ class sample_bigrams {
 		$bword_index = $sword_index + 1;
 		$new_bword = $contents[ $bword_index ] ;
 		$new_bword = substr( $new_bword, strlen( $bword ) );
-		$contents[ $bword_index ] = $new_bword;
+		$contents[ $bword_index ] = '</a>' . $new_bword;
 		//echo $new_bword;
 		bw_trace2( $new_bword, "new_bword", false );
 	}
@@ -507,7 +550,9 @@ class sample_bigrams {
 	}
 
 	function post_content( $post ) {
-		$post_content = "<!--more-->Sampled from {$post->post_title}.";
+		//$post_content = "<!--more-->Sampled from {$post->post_title}.";
+		$post_content = "<!-- wp:more --><!--more--><!-- /wp:more --><!-- wp:paragraph --><p>Sampled from {$post->post_title}.</p><!-- /wp:paragraph -->";
+
 		return $post_content;
 	}
 
@@ -542,8 +587,8 @@ class sample_bigrams {
 		// the test for the string below is invalid.
 		// More often than not the result is false even when the post has been sampled from another bigram or
 		// autogenerated as Seen before.
-		// Maybe we should ust strip the "<!--more---->!"" part of the search string
-		if ( false !== strpos( $post->post_content, "<!--more-->Sampled from" ) ) {
+		// Maybe we should just strip the "<!--more---->!"" part of the search string
+		if ( false !== strpos( $post->post_content, "Sampled from" ) ) {
 			return;
 		}
 		$this->posts = array( $post );
