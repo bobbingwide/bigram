@@ -206,8 +206,9 @@ function bigram_check_first_post( $swords, $bwords ) {
 }
 
 function bigram_create_post_content( $sword, $bword, $sterm, $bterm ) {
-	$content = sprintf( '<!--more-->Seen before as %1$s and %2$s.', $sword, $bword );
-	return $content;
+	$content = sprintf( 'Seen before as %1$s and %2$s.', $sword, $bword );
+	$post_content = "<!-- wp:more --><!--more--><!-- /wp:more --><!-- wp:paragraph --><p>$content</p><!-- /wp:paragraph -->";
+	return $post_content;
 }
 
 function bigram_title_text( $sword, $bword ) {
