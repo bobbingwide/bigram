@@ -1,6 +1,6 @@
 {
 	"name": "bigram",
-	"version": "0.6.0",
+	"version": "0.6.2",
 	"description": "SB Bigrams - Seen Before, Search Banter",
 	"author": "bobbingwide",
 	"license": "GPL 3.0",
@@ -22,11 +22,11 @@
 		"l10n": "l10n bigram"
 	},
 	"dependencies": {
-		"@wordpress/block-editor": "^12.13.0",
-		"@wordpress/blocks": "^12.22.0",
-		"@wordpress/i18n": "^4.45.0"
+		"@wordpress/block-editor": "^12.21.0",
+		"@wordpress/blocks": "^12.30.0",
+		"@wordpress/i18n": "^4.53.0"
 	},
 	"devDependencies": {
-		"@wordpress/scripts": "^26.16.0"
+		"@wordpress/scripts": "^27.4.0"
 	}
 }

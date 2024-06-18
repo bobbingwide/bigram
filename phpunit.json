@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="" tests="3" assertions="3" errors="0" warnings="0" failures="0" skipped="0" time="0.301002">
-    <testsuite name="bigram" tests="3" assertions="3" errors="0" warnings="0" failures="0" skipped="0" time="0.301002">
-      <testsuite name="Tests_load_php" file="C:\apache\htdocs\wordpress\wp-content\plugins\bigram\tests\test-a-load-php.php" tests="3" assertions="3" errors="0" warnings="0" failures="0" skipped="0" time="0.301002">
-        <testcase name="test_load_includes_php" class="Tests_load_php" classname="Tests_load_php" file="C:\apache\htdocs\wordpress\wp-content\plugins\bigram\tests\test-a-load-php.php" line="41" assertions="1" time="0.240386"/>
-        <testcase name="test_load_classes_php" class="Tests_load_php" classname="Tests_load_php" file="C:\apache\htdocs\wordpress\wp-content\plugins\bigram\tests\test-a-load-php.php" line="55" assertions="1" time="0.036611"/>
-        <testcase name="test_load_plugin" class="Tests_load_php" classname="Tests_load_php" file="C:\apache\htdocs\wordpress\wp-content\plugins\bigram\tests\test-a-load-php.php" line="76" assertions="1" time="0.024004"/>
+  <testsuite name="" tests="3" assertions="3" errors="0" warnings="0" failures="0" skipped="0" time="0.249477">
+    <testsuite name="bigram" tests="3" assertions="3" errors="0" warnings="0" failures="0" skipped="0" time="0.249477">
+      <testsuite name="Tests_load_php" file="C:\apache\htdocs\wordpress\wp-content\plugins\bigram\tests\test-a-load-php.php" tests="3" assertions="3" errors="0" warnings="0" failures="0" skipped="0" time="0.249477">
+        <testcase name="test_load_includes_php" class="Tests_load_php" classname="Tests_load_php" file="C:\apache\htdocs\wordpress\wp-content\plugins\bigram\tests\test-a-load-php.php" line="41" assertions="1" time="0.220414"/>
+        <testcase name="test_load_classes_php" class="Tests_load_php" classname="Tests_load_php" file="C:\apache\htdocs\wordpress\wp-content\plugins\bigram\tests\test-a-load-php.php" line="55" assertions="1" time="0.021486"/>
+        <testcase name="test_load_plugin" class="Tests_load_php" classname="Tests_load_php" file="C:\apache\htdocs\wordpress\wp-content\plugins\bigram\tests\test-a-load-php.php" line="76" assertions="1" time="0.007577"/>
       </testsuite>
     </testsuite>
   </testsuite>
