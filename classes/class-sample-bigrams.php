@@ -261,7 +261,7 @@ class sample_bigrams {
 		//$content = str_replace( " ,", ",", $content );
 		//$content = str_replace( " .", ".", $content );
 		//$content = str_replace( '  ', ' ', $content );
-		
+
 		return $content;
 	}
 
@@ -317,20 +317,24 @@ class sample_bigrams {
 		return $content;
 	}
 
+	/**
+	 * Converts SBs to links.
+	 *
+	 * This logic only runs against a subset of block types
+	 * and is only run on the front end.
+	 *
+	 * @param $content
+	 * @param $parsed_block
+	 * @param $block
+	 *
+	 * @return array|string|string[]
+	 */
 	function convert_bigrams_to_links( $content, $parsed_block, $block ) {
-		$contents = $this->process_contents_using_HTML_Tag_Processor( $content );
-		$linked_contents = $this->process_contents( $contents );
-		////echo $contents;
-		//echo $linked_contents;
-		//echo esc_html( $content );
-		oik_require_lib( 'hexdump');
-		bw_trace2( oik_hexdump( $content ), "contentNL", false);
-		//$content = str_replace( "\r\n", ' ', $content );
-		//$content = str_replace( "\r", ' ', $content );
-		bw_trace2( oik_hexdump( $content ), "contentNL", false);
-		$linked_content = str_replace( $contents, $linked_contents, $content);
-		//echo esc_html( $linked_content );
-		return $linked_content;
+		$content = str_replace( '>', '> ', $content );
+		$linked_contents = $this->process_contents( $content );
+		//oik_require_lib( 'hexdump');
+		//bw_trace2( oik_hexdump( $linked_contents ), "contentNL", false);
+		return $linked_contents;
 	}
 
 	function report() {

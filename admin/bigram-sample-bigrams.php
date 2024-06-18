@@ -36,7 +36,7 @@ function bigram_sample_bigrams() {
 
 }
 
-function bigram_sample_post( $post_ID=6550 ) {
+function bigram_sample_post( $post_ID=6682) {
 	oik_require( "classes/class-sample-bigrams.php", "bigram" );
 	$sample_bigrams = new sample_bigrams();
 	$sample_bigrams->set_echo();
