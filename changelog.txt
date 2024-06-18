@@ -1,4 +1,7 @@
 == Upgrade Notice ==
+= 0.6.1 = 
+Update for new taxonomies: supplied-by and synthesised-by
+
 = 0.6.0 = 
 Update for support for PHP 8.1, PHP 8.2 and PHP 8.3
 
@@ -43,6 +46,12 @@ New plugin for the WordPress version of bigram.co.uk.
 The original site was developed with Drupal.
 
 == Changelog ==
+= 0.6.1 =
+* Added: Add new taxonomies: supplied-by and synthesised-by #43
+* Tested: With WordPress 6.4.3
+* Tested: PHP 8.3
+* Tested: With PHPUnit 9.6
+
 = 0.6.0 =
 * Changed: Add PHPUnit tests for PHP 8.1 and PHP 8.2 #39
 * Changed: Update wp-scripts #40

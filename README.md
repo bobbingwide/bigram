@@ -4,8 +4,8 @@
 * Donate link: https://www.oik-plugins.com/oik/oik-donate/
 * Tags: specific, behaviour
 * Requires at least: 4.5.2
-* Tested up to: 6.4.3
-* Stable tag: 0.6.1
+* Tested up to: 6.5.4
+* Stable tag: 0.7.0
 * License: GPLv2 or later
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -55,8 +55,15 @@ The attachments post type has also been customised.
 The custom taxonomies are:
 - s-word for the word beginning with S
 - b-word for the word beginning with B
+- synthesised-by - the name of the image generation routine
 
-The above two taxonomies, as well as the default Category, are attached to both bigrams and attachments.
+The above taxonomies, as well as the default Category, are attached to both bigrams and attachments.
+
+Other custom taxonomies for the bigram CPT are:
+
+- s-letter for the second letter of the S-word
+- b-letter for the second letter of the B-word
+- supplied-by - the name of the person who supplied the SB
 
 We don't really use posts.
 
@@ -75,12 +82,16 @@ And some bits were cribbed from Pictorico... but they didn't work well on tablet
 1. None yet
 
 ## Upgrade Notice 
-# 0.6.1 
-* Update for new taxonomies: supplied-by and synthesised-by
+# 0.7.0 
+Update for improved sampling and display of SB links and improved form for Submit bigram.
 
 ## Changelog 
-# 0.6.1 
-* Added: Add new taxonomies: supplied-by and synthesised-by #43
-* Tested: With WordPress 6.4.3
+# 0.7.0 
+* Changed: Update wp-scripts to v27.4.0 #40
+* Changed: Generate Seen before posts using blocks #4
+* Changed: SB link creation: Replace logic filtering `the_content` to filter the output for specific block rendering #4
+* Changed: Update bigram sampling logic #4
+* Changed: Display taxonomies as drop down select lists #43
+* Tested: With WordPress 6.5.4
 * Tested: PHP 8.3
 * Tested: With PHPUnit 9.6
