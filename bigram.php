@@ -57,6 +57,8 @@ function bigram_loaded() {
 	add_filter( 'render_block_', 'bigram_render_block_core_paragraph', 10, 3, );
 	add_filter( 'render_block_core/heading', 'bigram_render_block_core_paragraph', 10, 3, );
 	add_filter( 'render_block_core/code', 'bigram_render_block_core_paragraph', 10, 3, );
+	add_filter( 'render_block_core/verse', 'bigram_render_block_core_paragraph', 10, 3, );
+	add_filter( 'render_block_core/table', 'bigram_render_block_core_paragraph', 10, 3, );
 	add_filter( 'run_wptexturize', '__return_false');
 
 }
