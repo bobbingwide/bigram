@@ -516,7 +516,7 @@ function bigram_check_tag_object( $tag ) {
  * @return string updated post content
  */
 function bigram_the_content( $content ) {
-	//bw_trace2();
+	//bw_trace2(
 	static $sample_bigrams = null;
 	if ( !$sample_bigrams ) {
 		oik_require( "classes/class-sample-bigrams.php", "bigram" );
@@ -632,6 +632,7 @@ function bigram_block_dynamic_block( $attributes ) {
     $html .= '<span class="seen-before-value">';
     $times = _n( '%1$s time', '%1$s times', $seen_before, "bigram" );
     $html .= sprintf( $times, number_format_i18n( $seen_before ) );
+	$html .= '</span>';
     $html .= '</div>';
 
     return $html;
@@ -672,6 +673,7 @@ function bigram_block_dynamic_block_search_banter( $attributes ) {
 	if ( !is_search() ) {
 		return null;
 	}
+	$html = null;
 	if (function_exists('\oik\oik_blocks\oik_blocks_check_server_func')) {
 
 		$html = \oik\oik_blocks\oik_blocks_check_server_func('includes/search-banter.php', 'bigram', 'bigram_search_banter');
@@ -749,7 +751,6 @@ function bw_form_field_synthesised_by( $name, $type, $title, $value, $args) {
  * @return mixed|string
  */
 function bigram_render_block_core_paragraph( $content, $parsed_block, $block ) {
-	//echo $content;
 	bw_trace2( $content, "content", false);
 	$sample_bigrams = bigram_load_sample_bigrams();
 	$content = $sample_bigrams->convert_bigrams_to_links( $content, $parsed_block, $block );
