@@ -1,4 +1,7 @@
 == Upgrade Notice ==
+= 0.7.0 = 
+Update for improved sampling and display of SB links and improved form for Submit bigram.
+
 = 0.6.1 = 
 Update for new taxonomies: supplied-by and synthesised-by
 
@@ -46,6 +49,16 @@ New plugin for the WordPress version of bigram.co.uk.
 The original site was developed with Drupal.
 
 == Changelog ==
+= 0.7.0 =
+* Changed: Update wp-scripts to v27.4.0 #40
+* Changed: Generate Seen before posts using blocks #4
+* Changed: SB link creation: Replace logic filtering `the_content` to filter the output for specific block rendering #4
+* Changed: Update bigram sampling logic #4
+* Changed: Display taxonomies as drop down select lists #43
+* Tested: With WordPress 6.5.4
+* Tested: PHP 8.3
+* Tested: With PHPUnit 9.6
+
 = 0.6.1 =
 * Added: Add new taxonomies: supplied-by and synthesised-by #43
 * Tested: With WordPress 6.4.3
